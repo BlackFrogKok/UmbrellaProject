@@ -26,23 +26,38 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         User user = new User(Locale.getDefault().getLanguage(), this);
-        if(user.isLogin()){
-            startMainActivity(user);
+
+        if(true){
+            startMainActivityAuth(user);
         } else {
             startRegistrationActivity(user);
         }
+
+
+
+
     }
 
-    private void startMainActivity(User user){
+    //временно
+    private void startMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(User.class.getSimpleName(), user);
+        startActivity(intent);
+        finish();
+    }
+
+
+
+
+    private void startMainActivityAuth(User user){
+        Intent intent = new Intent(this, MainActivity.class);
+        //intent.putExtra(User.class.getSimpleName(), user);
         startActivity(intent);
         finish();
     }
 
     private void startRegistrationActivity(User user){
         Intent intent = new Intent(this, SignInActivity.class);
-        intent.putExtra(User.class.getSimpleName(), user);
+        //intent.putExtra(User.class.getSimpleName(), user);
         startActivity(intent);
         finish();
     }

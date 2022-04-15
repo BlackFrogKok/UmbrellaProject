@@ -4,4 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.samsungschool.umbrellaproject.Activity.MainActivity"/>
+    tools:context="com.samsungschool.umbrellaproject.Activity.MainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.samsungschool.umbrellaproject.Fragments.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="184dp"
+        tools:layout_editor_absoluteY="103dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
