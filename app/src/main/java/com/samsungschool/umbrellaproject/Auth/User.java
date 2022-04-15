@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.compose.foundation.text.StringHelpers_jvmKt;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;

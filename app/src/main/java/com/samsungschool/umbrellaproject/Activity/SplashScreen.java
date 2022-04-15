@@ -29,7 +29,7 @@ public class SplashScreen extends AppCompatActivity {
         if(user.isLogin()){
             startMainActivity(user);
         } else {
-            startRegistrationActivity();
+            startRegistrationActivity(user);
         }
     }
 
