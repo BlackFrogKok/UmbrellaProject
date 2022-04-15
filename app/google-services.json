@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "773777583603",
+    "project_id": "samsung-project-umbrella",
+    "storage_bucket": "samsung-project-umbrella.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773777583603:android:bec2be436e47b56f9df686",
+        "android_client_info": {
+          "package_name": "com.samsungschool.umbrellaproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773777583603-h5g7fkstb37rn00rr2akcq8blck8nise.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.samsungschool.umbrellaproject",
+            "certificate_hash": "f788c66cccb34bd3a77768dba4ccbd84e869aad9"
+          }
+        },
+        {
+          "client_id": "773777583603-dv4edjic1jtpvjbb7nk7c0jvgi15cd4g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAclt_o2aO4NV1ilWwF5FT-xXcMR-rlMsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773777583603-dv4edjic1jtpvjbb7nk7c0jvgi15cd4g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

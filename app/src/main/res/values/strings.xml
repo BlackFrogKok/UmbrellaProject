@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">UmbrellaProject</string>
+    <string name="verificationPhoneText">Вход по номеру \n телефона</string>
+</resources>
