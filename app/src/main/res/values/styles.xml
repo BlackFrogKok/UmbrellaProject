@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Floating label text style-->
+<resources>
+    <style name="MyHintText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:hint">false</item>
+    </style>
+
+        <!--Input field style-->
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+    </style>
+</resources>

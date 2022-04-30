@@ -1,20 +1,16 @@
 package com.samsungschool.umbrellaproject.Activity;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 
 
-import com.samsungschool.umbrellaproject.Activity.MainActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.samsungschool.umbrellaproject.Auth.SignInActivity;
-import com.samsungschool.umbrellaproject.Auth.User;
-
-import java.util.Locale;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -24,40 +20,24 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        User user = new User(Locale.getDefault().getLanguage(), this);
-
-        if(true){
-            startMainActivityAuth(user);
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null){
+            startMainActivityAuth(firebaseAuth);
         } else {
-            startRegistrationActivity(user);
+            startRegistrationActivity(firebaseAuth);
         }
 
-
-
-
     }
 
-    //временно
-    private void startMainActivity(){
+    private void startMainActivityAuth(FirebaseAuth firebaseAuth){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-
-
-
-    private void startMainActivityAuth(User user){
-        Intent intent = new Intent(this, MainActivity.class);
-        //intent.putExtra(User.class.getSimpleName(), user);
-        startActivity(intent);
-        finish();
-    }
-
-    private void startRegistrationActivity(User user){
+    private void startRegistrationActivity(FirebaseAuth firebaseAuth){
         Intent intent = new Intent(this, SignInActivity.class);
-        //intent.putExtra(User.class.getSimpleName(), user);
         startActivity(intent);
         finish();
     }

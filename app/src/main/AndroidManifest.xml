@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.umbrellaproject" >
+    package="com.samsungschool.umbrellaproject" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,11 +16,15 @@
         android:theme="@style/Theme.UmbrellaProject" >
         <activity
             android:name="com.samsungschool.umbrellaproject.Auth.SignInActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name="com.samsungschool.umbrellaproject.Activity.SplashScreen"
             android:exported="true"
-            android:theme="@style/SplashScreen" >
+            android:theme="@style/SplashScreen"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -23,7 +32,9 @@
         </activity>
         <activity
             android:name="com.samsungschool.umbrellaproject.Activity.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

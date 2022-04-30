@@ -6,14 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.samsungschool.umbrellaproject.Auth.SignInActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/verificationPhoneText"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="89dp"
-        tools:layout_editor_absoluteY="190dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frgmCont"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
