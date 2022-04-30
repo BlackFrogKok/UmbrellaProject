@@ -51,7 +51,7 @@ public class MainFragment extends Fragment{
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        MapKitFactory.setApiKey("d80212c2-0e79-43e5-b249-7e7612d3f566");
+
         MapKitFactory.initialize(this.getContext());
         super.onCreate(savedInstanceState);
     }

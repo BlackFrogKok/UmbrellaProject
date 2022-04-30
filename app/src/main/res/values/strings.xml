@@ -4,4 +4,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="phoneFormat">+</string>
+    <string name="about">About authors</string>
+    <string name="settings">Settings</string>
+    <string name="map">Map</string>
+    <string name="temp">something info</string>
 </resources>
