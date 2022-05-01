@@ -60,7 +60,6 @@ public class SignIn{
 
 
     public void verifyPhoneWithCode(String code){
-
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, code);
         signWithPhoneAuthCredential(credential);
     }

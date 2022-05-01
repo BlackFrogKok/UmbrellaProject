@@ -3,7 +3,11 @@ package com.samsungschool.umbrellaproject.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.samsungschool.umbrellaproject.Fragments.AboutFragment;
@@ -15,7 +19,6 @@ import com.yandex.mapkit.MapKitFactory;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.onNavBtnClickListener {
     private ActivityMainBinding binding;
-
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -24,35 +27,33 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
-        MapKitFactory.setApiKey("d80212c2-0e79-43e5-b249-7e7612d3f566");
-        startFragment(MainFragment.newInstance());
-        binding.materialToolbar2.setNavigationOnClickListener(v -> onClick());
-
+        startFragment(MainFragment.newInstance(), "main");
+        binding.materialToolbar2.setNavigationOnClickListener(v -> startFragment(MainFragment.newInstance(), "main"));
 
         binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
             binding.getRoot().close();
             switch (item.getItemId()) {
-                case R.id.nav_first:
-                    startFragment(MainFragment.newInstance());
-                    return true;
                 case R.id.nav_second:
-                    startFragment(SettingsFragment.newInstance());
+                    startFragment(SettingsFragment.newInstance(), "settings");
                     return true;
                 case R.id.nav_third:
-                    startFragment(AboutFragment.newInstance());
+                    startFragment(AboutFragment.newInstance(), "about");
                     return true;
                 default:
                     return false;
             }
         });
 
-        binding.navigationDrawer.setCheckedItem(R.id.nav_first);
-
     }
 
 
-
-    private void startFragment(Fragment fragment) {
+    private void startFragment(Fragment fragment, String arg) {
+        if (arg.equals("main")){
+            binding.materialToolbar2.setVisibility(View.GONE);
+        }
+        else{
+            binding.materialToolbar2.setVisibility(View.VISIBLE);
+        }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
@@ -62,4 +63,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
     public void onClick() {
         binding.getRoot().open();
     }
+
+    public SensorManager getManager() {
+        return (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+    }
+
 }

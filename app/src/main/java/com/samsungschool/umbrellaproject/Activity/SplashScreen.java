@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.samsungschool.umbrellaproject.Auth.SignInActivity;
+import com.yandex.mapkit.MapKitFactory;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -22,6 +23,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
+        MapKitFactory.setApiKey("d80212c2-0e79-43e5-b249-7e7612d3f566");
         if(user != null){
             startMainActivityAuth(firebaseAuth);
         } else {

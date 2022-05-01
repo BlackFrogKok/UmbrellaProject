@@ -35,7 +35,26 @@ public class userPoint implements UserLocationObjectListener {
                 new PointF((float)(mapview.getWidth() * 0.5), (float)(mapview.getHeight() * 0.5)),
                 new PointF((float)(mapview.getWidth() * 0.5), (float)(mapview.getHeight() * 0.83))
         );
-        userLocationView.getArrow().setIcon(ImageProvider.fromResource(context, R.drawable.user_arrow));
+        userLocationView.getArrow().setIcon(ImageProvider.fromResource(context, R.drawable.user_marker));
+        CompositeIcon pinIcon = userLocationView.getPin().useCompositeIcon();
+        pinIcon.setIcon(
+                "icon",
+                ImageProvider.fromResource(context, R.drawable.user_marker_compass),
+                new IconStyle().setAnchor(new PointF(0f, 0f))
+                        .setRotationType(RotationType.ROTATE)
+                        .setZIndex(0f)
+                        .setScale(1f)
+        );
+
+        pinIcon.setIcon(
+                "pin",
+                ImageProvider.fromResource(context, R.drawable.ic_user_navi_pin),
+                new IconStyle().setAnchor(new PointF(0.5f, 0.5f))
+                        .setRotationType(RotationType.ROTATE)
+                        .setZIndex(1f)
+                        .setScale(0.5f)
+        );
+
         userLocationView.getAccuracyCircle().setFillColor(Color.BLUE & 0x99ffffff);
 
     }
