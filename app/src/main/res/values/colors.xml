@@ -9,4 +9,16 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0000FF</color>
     <color name="gray">#3d3d3d</color>
+
+
+
+    <color name="primaryColor">#1565c0</color>
+    <color name="primaryLightColor">#5e92f3</color>
+    <color name="primaryDarkColor">#003c8f</color>
+    <color name="secondaryColor">#0096a5</color>
+    <color name="secondaryLightColor">#56c7d6</color>
+    <color name="secondaryDarkColor">#006876</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#000000</color>
+    <color name="opacityToolBar">#80003c8f</color>
 </resources>

@@ -33,9 +33,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_menu"
-            android:background="@color/fui_transparent"
+            android:background="@color/opacityToolBar"
             app:title="@string/temp"
-            app:titleTextColor="@color/black"
+            app:titleTextColor="?attr/colorOnSurface"
             app:navigationIconTint="@color/black"
             />
 
@@ -52,6 +52,7 @@
         app:headerLayout="@layout/nav_header"
         app:itemShapeFillColor="@color/nav_bg_color_selector"
         app:itemIconTint="@color/white"
+
 
         />
 
