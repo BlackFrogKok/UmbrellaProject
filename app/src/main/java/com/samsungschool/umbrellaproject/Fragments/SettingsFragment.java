@@ -14,8 +14,8 @@ import com.samsungschool.umbrellaproject.databinding.FragmentSettingsBinding;
 
 public class SettingsFragment extends Fragment {
     FragmentSettingsBinding binding;
-    public static AboutFragment newInstance() {
-        AboutFragment fragment = new AboutFragment();
+    public static SettingsFragment newInstance() {
+        SettingsFragment fragment = new SettingsFragment();
         return fragment;
     }
 

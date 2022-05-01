@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         firebaseAuth = FirebaseAuth.getInstance();
         MapKitFactory.setApiKey("d80212c2-0e79-43e5-b249-7e7612d3f566");
         startFragment(MainFragment.newInstance());
+        binding.materialToolbar2.setNavigationOnClickListener(v -> onClick());
 
 
         binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
