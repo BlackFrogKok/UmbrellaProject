@@ -1,4 +1,4 @@
-package com.samsungschool.umbrellaproject.Fragments;
+package com.samsungschool.umbrellaproject.Fragments.HistoryFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

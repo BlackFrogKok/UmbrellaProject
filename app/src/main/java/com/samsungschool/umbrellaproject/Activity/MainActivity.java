@@ -41,35 +41,45 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                         binding.getRoot().close();
                     }
                 });
+        itemSelector();
 
 
-        binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
-            binding.getRoot().close();
-            switch (item.getItemId()) {
-                case R.id.nav_settings:
-                    startFragment(SettingsFragment.newInstance(), "settings");
-                    return true;
-                case R.id.nav_about:
-                    startFragment(AboutFragment.newInstance(), "about");
-                    return true;
-                default:
-                    return false;
-            }
-        });
+
 
     }
 
 
     private void startFragment(Fragment fragment, String arg) {
-        if (arg.equals("main")){
+        if (arg.equals("main")) {
             binding.materialToolbar2.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             binding.materialToolbar2.setVisibility(View.VISIBLE);
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+    }
+
+    private void itemSelector(){
+        binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
+            binding.getRoot().close();
+            switch (item.getItemId()) {
+                case R.id.nav_user:
+                    startFragment(ProfileFragment.newInstance(), "user");
+                    binding.materialToolbar2.setTitle(R.string.user_item);
+                    return true;
+                case R.id.nav_settings:
+                    startFragment(SettingsFragment.newInstance(), "settings");
+                    binding.materialToolbar2.setTitle(R.string.settings_item);
+                    return true;
+                case R.id.nav_about:
+                    startFragment(AboutFragment.newInstance(), "about");
+                    binding.materialToolbar2.setTitle(R.string.about_item);
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
 
     @Override
