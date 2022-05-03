@@ -12,6 +12,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.samsungschool.umbrellaproject.Fragments.AboutFragment;
 import com.samsungschool.umbrellaproject.Fragments.MainFragment;
+import com.samsungschool.umbrellaproject.Fragments.ProfileFragment;
 import com.samsungschool.umbrellaproject.Fragments.SettingsFragment;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.ActivityMainBinding;
@@ -30,13 +31,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         startFragment(MainFragment.newInstance(), "main");
         binding.materialToolbar2.setNavigationOnClickListener(v -> startFragment(MainFragment.newInstance(), "main"));
 
+        binding.navigationDrawer
+                .getHeaderView(0)
+                .findViewById(R.id.userAvatar)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startFragment(ProfileFragment.newInstance(), "profile");
+                        binding.getRoot().close();
+                    }
+                });
+
+
         binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
             binding.getRoot().close();
             switch (item.getItemId()) {
-                case R.id.nav_second:
+                case R.id.nav_settings:
                     startFragment(SettingsFragment.newInstance(), "settings");
                     return true;
-                case R.id.nav_third:
+                case R.id.nav_about:
                     startFragment(AboutFragment.newInstance(), "about");
                     return true;
                 default:

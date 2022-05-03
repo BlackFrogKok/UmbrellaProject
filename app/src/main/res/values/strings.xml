@@ -1,13 +1,42 @@
 <resources>
     <string name="app_name">UmbrellaProject</string>
+
+
+
+
+
+    <!-- Auth -->
     <string name="verificationPhoneText">Вход по номеру \n телефона</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="phoneFormat">+</string>
-    <string name="about">About app</string>
-    <string name="aboutInfo">ЕБАТЬ ЭТО ПРИЛОЖЕНИЕ ДЕЛАЛИ НАСТОЯЩИЕ ПРОФЕССИОНАЛЫ СВОЕГО ДЕЛА!!!!!!!!!!!!!!!!!!!!!</string>
-    <string name="settings">Settings</string>
+
+    <!-- Information on fragments -->
     <string name="settingsInfo">НАСТРОЙКИ ВСЯ ХУЙНЯ</string>
-    <string name="map">Map</string>
+    <string name="aboutInfo">ЕБАТЬ ЭТО ПРИЛОЖЕНИЕ ДЕЛАЛИ НАСТОЯЩИЕ ПРОФЕССИОНАЛЫ СВОЕГО ДЕЛА!!!!!!!!!!!!!!!!!!!!!</string>
+
+
+
+    <!-- Title of navigation view -->
+
+    <string name="qr_item">QR read</string>
+    <string name="nfc_item">NFC read</string>
+    <string name="history_item">History</string>
+    <string name="settings_item">Settings</string>
+    <string name="user_item">User</string>
+    <string name="help_item">Help</string>
+    <string name="about_item">About app</string>
+
+
+
+
+
+
+    <!-- for developing -->
     <string name="temp">something info</string>
+    <string name="test">bla-bla-bla smth must be here</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+
+
 </resources>
