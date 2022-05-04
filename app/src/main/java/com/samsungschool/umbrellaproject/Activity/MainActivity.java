@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.samsungschool.umbrellaproject.Fragments.AboutFragment;
+import com.samsungschool.umbrellaproject.Fragments.HistoryFragment.HistoryFragment;
+import com.samsungschool.umbrellaproject.Fragments.HistoryFragment.HistoryItem;
 import com.samsungschool.umbrellaproject.Fragments.MainFragment;
 import com.samsungschool.umbrellaproject.Fragments.ProfileFragment;
 import com.samsungschool.umbrellaproject.Fragments.SettingsFragment;
@@ -72,6 +74,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     startFragment(SettingsFragment.newInstance(), "settings");
                     binding.materialToolbar2.setTitle(R.string.settings_item);
                     return true;
+                case R.id.nav_history:
+                    startFragment(HistoryFragment.newInstance(), "history");
+                    binding.materialToolbar2.setTitle(R.string.history_item);
+                    return true;
+
                 case R.id.nav_about:
                     startFragment(AboutFragment.newInstance(), "about");
                     binding.materialToolbar2.setTitle(R.string.about_item);

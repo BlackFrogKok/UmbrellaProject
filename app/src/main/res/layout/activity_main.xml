@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/abc_ic_clear_material"
-            android:background="@color/opacityToolBar"
+            android:background="?attr/colorPrimaryDark"
             app:title="@string/temp"
             app:titleTextColor="?attr/colorOnSurface"
             app:navigationIconTint="@color/black"

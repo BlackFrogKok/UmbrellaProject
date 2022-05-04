@@ -10,8 +10,8 @@
     <string name="phoneFormat">+</string>
 
     <!-- Information on fragments -->
-    <string name="settingsInfo">НАСТРОЙКИ ВСЯ ХУЙНЯ</string>
-    <string name="aboutInfo">ЕБАТЬ ЭТО ПРИЛОЖЕНИЕ ДЕЛАЛИ НАСТОЯЩИЕ ПРОФЕССИОНАЛЫ СВОЕГО ДЕЛА!!!!!!!!!!!!!!!!!!!!!</string>
+    <string name="settingsInfo">Настройки</string>
+    <string name="aboutInfo">О приложении</string>
 
 
 
