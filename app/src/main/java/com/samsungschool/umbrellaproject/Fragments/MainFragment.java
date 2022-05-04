@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -161,11 +162,19 @@ public class MainFragment extends Fragment {
                             ClusterizedPlacemarkCollection clusterizedCollection =
                                     mapview.getMap().getMapObjects().addClusterizedPlacemarkCollection(new ClusterListenerClass(getResources(), activity.getWindowManager()));
 
+                            clusterizedCollection.addTapListener(new MapObjectTapListener() {
+                                @Override
+                                public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
+                                    Toast.makeText(context,String.valueOf(point.getLatitude()) + String.valueOf(point.getLongitude()), Toast.LENGTH_SHORT).show();
+                                    return false;
+                                }
+                            });
+
                             clusterizedCollection.addPlacemarks(output, ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)), new IconStyle());
 
                             clusterizedCollection.clusterPlacemarks(20, 15);
                         }, throwable -> {
-                            Log.d("ErrorRx", throwable.toString());
+                            FirebaseCrashlytics.getInstance().recordException(throwable);
                         });
 
                 compositeDisposable.add(disposable);
@@ -254,16 +263,6 @@ public class MainFragment extends Fragment {
         super.onDestroy();
         compositeDisposable.clear();
         binding = null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     public interface onNavBtnClickListener {
