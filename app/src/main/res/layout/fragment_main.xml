@@ -25,6 +25,27 @@
         android:layout_marginTop="20dp"
         android:id="@+id/navBtn"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:icon="@drawable/qr_icon"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="80dp"
+        app:cornerRadius="50dp"
+        android:backgroundTint="?attr/colorSecondary"
+        app:iconTint="@color/teal_200"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.914" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
