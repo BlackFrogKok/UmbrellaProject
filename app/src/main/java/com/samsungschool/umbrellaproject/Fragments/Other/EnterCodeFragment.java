@@ -1,4 +1,4 @@
-package com.samsungschool.umbrellaproject.Fragments;
+package com.samsungschool.umbrellaproject.Fragments.Other;
 
 import android.content.Context;
 import android.os.Bundle;

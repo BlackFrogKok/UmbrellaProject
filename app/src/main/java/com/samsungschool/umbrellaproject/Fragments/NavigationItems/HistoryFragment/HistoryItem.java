@@ -1,4 +1,4 @@
-package com.samsungschool.umbrellaproject.Fragments.HistoryFragment;
+package com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment;
 
 public class HistoryItem {
     private Integer date = 0;

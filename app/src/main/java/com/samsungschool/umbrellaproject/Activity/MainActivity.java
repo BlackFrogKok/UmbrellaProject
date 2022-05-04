@@ -1,44 +1,23 @@
 package com.samsungschool.umbrellaproject.Activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.samsungschool.umbrellaproject.Fragments.AboutFragment;
-import com.samsungschool.umbrellaproject.Fragments.HistoryFragment.HistoryFragment;
-import com.samsungschool.umbrellaproject.Fragments.HistoryFragment.HistoryItem;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.AboutFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryFragment;
 import com.samsungschool.umbrellaproject.Fragments.MainFragment;
-import com.samsungschool.umbrellaproject.Fragments.ProfileFragment;
-import com.samsungschool.umbrellaproject.Fragments.SettingsFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.ProfileFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragment;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.ActivityMainBinding;
-import com.yandex.mapkit.MapKitFactory;
-import com.yandex.mapkit.geometry.Point;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.onNavBtnClickListener {
     private ActivityMainBinding binding;

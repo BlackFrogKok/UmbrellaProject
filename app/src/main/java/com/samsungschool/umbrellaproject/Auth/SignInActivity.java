@@ -3,16 +3,15 @@ package com.samsungschool.umbrellaproject.Auth;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.samsungschool.umbrellaproject.Fragments.EnterCodeFragment;
+import com.samsungschool.umbrellaproject.Fragments.Other.EnterCodeFragment;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.ActivitySignInBinding;
-import com.samsungschool.umbrellaproject.Fragments.EnterPhoneFragment;
+import com.samsungschool.umbrellaproject.Fragments.Other.EnterPhoneFragment;
 
 public class SignInActivity extends AppCompatActivity implements EnterPhoneFragment.onEnterPhoneListener, EnterCodeFragment.onEnterCodeFragmentListener{
 

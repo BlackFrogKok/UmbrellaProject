@@ -1,4 +1,4 @@
-package com.samsungschool.umbrellaproject.Fragments;
+package com.samsungschool.umbrellaproject.Fragments.NavigationItems;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,22 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.samsungschool.umbrellaproject.databinding.FragmentProfileBinding;
+import com.samsungschool.umbrellaproject.databinding.FragmentSettingsBinding;
 
-public class ProfileFragment extends Fragment {
-    FragmentProfileBinding binding;
-    public static ProfileFragment newInstance() {
-        Bundle args = new Bundle();
-
-        ProfileFragment fragment = new ProfileFragment();
-        fragment.setArguments(args);
+public class SettingsFragment extends Fragment {
+    FragmentSettingsBinding binding;
+    public static SettingsFragment newInstance() {
+        SettingsFragment fragment = new SettingsFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentProfileBinding.inflate(getLayoutInflater());
+        binding = FragmentSettingsBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
