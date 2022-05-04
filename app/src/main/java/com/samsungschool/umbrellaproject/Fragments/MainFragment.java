@@ -8,20 +8,34 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
+import com.samsungschool.umbrellaproject.ClusterListenerClass;
+import com.samsungschool.umbrellaproject.FirestoreDataBase;
+import com.samsungschool.umbrellaproject.OnLoadDataListener;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.FragmentMainBinding;
 import com.yandex.mapkit.Animation;
+import com.yandex.mapkit.GeoObjectCollection;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.location.FilteringMode;
@@ -30,24 +44,48 @@ import com.yandex.mapkit.location.LocationListener;
 import com.yandex.mapkit.location.LocationManager;
 import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.ClusterizedPlacemarkCollection;
 import com.yandex.mapkit.map.IconStyle;
+import com.yandex.mapkit.map.MapObject;
+import com.yandex.mapkit.map.MapObjectTapListener;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.map.RotationType;
 import com.yandex.mapkit.mapview.MapView;
+import com.yandex.mapkit.search.Address;
+import com.yandex.mapkit.search.Response;
+import com.yandex.mapkit.search.SearchFactory;
+import com.yandex.mapkit.search.SearchManager;
+import com.yandex.mapkit.search.SearchManagerType;
+import com.yandex.mapkit.search.SearchOptions;
+import com.yandex.mapkit.search.SearchType;
+import com.yandex.mapkit.search.Session;
+import com.yandex.runtime.Error;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public class MainFragment extends Fragment {
 
-    private static final String TAG = "lllll";
     private static final double DESIRED_ACCURACY = 1;
     private static final long MINIMAL_TIME = 1000;
     private static final double MINIMAL_DISTANCE = 0.1;
     private static final boolean USE_IN_BACKGROUND = true;
     public static final float COMFORTABLE_ZOOM_LEVEL = 18.0f;
-    private final String MAPKIT_API_KEY = "";
     private LocationManager locationManager;
     private LocationListener myLocationListener;
     private Point myLocation;
@@ -58,17 +96,19 @@ public class MainFragment extends Fragment {
     private onNavBtnClickListener navClickListener;
     private Context context;
     private SensorManager manager;
+    private FirebaseFirestore dataBase;
+    private FirestoreDataBase firestoreDataBase;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
 
     private int mAzimuth = 0; // degree
-
-
     private Sensor mGravity;
     private Sensor mAccelerometer;
     private Sensor mMagnetometer;
-
     boolean haveGravity = false;
     boolean haveAccelerometer = false;
     boolean haveMagnetometer = false;
+
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -80,42 +120,60 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         MapKitFactory.initialize(this.getContext());
-        super.onCreate(savedInstanceState);
-    }
+        SearchFactory.initialize(this.getContext());
 
-    @Override
-    public void onAttach(Context context) {
-        this.context = context;
-        super.onAttach(context);
-        try {
-            navClickListener = (onNavBtnClickListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement onSomeEventListener");
-        }
-    }
-
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+        context = getContext();
         binding = FragmentMainBinding.inflate(getLayoutInflater());
         binding.navBtn.setOnClickListener(v -> navClickListener.onClick());
+        binding.gpsFindPositionBtn.setOnClickListener(v ->{
+            if(myLocation != null) moveCamera(myLocation, 17.0f);
+        });
+
         MainActivity activity = (MainActivity) getActivity();
         manager = activity.getManager();
-        binding.gpsFindPositionBtn.setOnClickListener(v ->{
-            if(myLocation != null){
-                mapview.getMap().move(
-                        new CameraPosition(myLocation, 17.0f, 0.0f, 0.0f),
-                        new Animation(Animation.Type.SMOOTH, 1),
-                        null);
+        mapview = binding.mapView;
+        firestoreDataBase = new FirestoreDataBase();
+        mapview.getMap().setNightModeEnabled(true);
+
+
+        mGravity = manager.getDefaultSensor( Sensor.TYPE_GRAVITY );
+        haveGravity = manager.registerListener( mSensorEventListener, mGravity, SensorManager.SENSOR_DELAY_GAME );
+        mAccelerometer = manager.getDefaultSensor( Sensor.TYPE_ACCELEROMETER );
+        haveAccelerometer = manager.registerListener( mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME );
+        mMagnetometer = manager.getDefaultSensor( Sensor.TYPE_MAGNETIC_FIELD );
+        haveMagnetometer = manager.registerListener( mSensorEventListener, mMagnetometer, SensorManager.SENSOR_DELAY_GAME );
+
+
+
+        firestoreDataBase.setOnOnCompleteDataListener(new OnLoadDataListener<List<DocumentSnapshot>>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onComplete(@NonNull Observable<List<DocumentSnapshot>> observable) {
+                Log.w("rxl", "kk");
+                Disposable disposable = observable
+                        .subscribeOn(Schedulers.io())
+                        .map(obj -> obj.stream()
+                                .map(FirestoreDataBase::castHashMapToPoint)
+                                .collect(Collectors.toList())
+                        )
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(output -> {
+                            ClusterizedPlacemarkCollection clusterizedCollection =
+                                    mapview.getMap().getMapObjects().addClusterizedPlacemarkCollection(new ClusterListenerClass(getResources(), activity.getWindowManager()));
+
+                            clusterizedCollection.addPlacemarks(output, ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)), new IconStyle());
+
+                            clusterizedCollection.clusterPlacemarks(20, 15);
+                        }, throwable -> {
+                            Log.d("ErrorRx", throwable.toString());
+                        });
+
+                compositeDisposable.add(disposable);
             }
         });
 
-        mapview = binding.mapView;
-        mapview.getMap().setNightModeEnabled(false);
-        mapview.getMap().move(new CameraPosition(new Point(0, 0), 14, 0, 0));
-// разработка кастомного serLocationPoint
+
+
         locationManager = MapKitFactory.getInstance().createLocationManager();
         myLocationListener = new LocationListener() {
             @Override
@@ -143,14 +201,6 @@ public class MainFragment extends Fragment {
         };
 
 
-        mGravity = manager.getDefaultSensor( Sensor.TYPE_GRAVITY );
-        haveGravity = manager.registerListener( mSensorEventListener, mGravity, SensorManager.SENSOR_DELAY_GAME );
-
-        mAccelerometer = manager.getDefaultSensor( Sensor.TYPE_ACCELEROMETER );
-        haveAccelerometer = manager.registerListener( mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME );
-
-        mMagnetometer = manager.getDefaultSensor( Sensor.TYPE_MAGNETIC_FIELD );
-        haveMagnetometer = manager.registerListener( mSensorEventListener, mMagnetometer, SensorManager.SENSOR_DELAY_GAME );
 
         // if there is a gravity sensor we do not need the accelerometer
         if(haveGravity)
@@ -160,6 +210,25 @@ public class MainFragment extends Fragment {
         } else {
             // unregister and stop
         }
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            navClickListener = (onNavBtnClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement onSomeEventListener");
+        }
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return binding.getRoot();
     }
 
@@ -169,7 +238,7 @@ public class MainFragment extends Fragment {
         super.onStart();
         mapview.onStart();
         MapKitFactory.getInstance().onStart();
-         subscribeToLocationUpdate();
+        subscribeToLocationUpdate();
     }
 
 
@@ -183,6 +252,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        compositeDisposable.clear();
         binding = null;
     }
 
@@ -211,7 +281,7 @@ public class MainFragment extends Fragment {
     private void moveCamera(Point point, float zoom) {
         mapview.getMap().move(
                 new CameraPosition(point, zoom, 0.0f, 0.0f),
-                new Animation(Animation.Type.SMOOTH, 0),
+                new Animation(Animation.Type.SMOOTH, 1),
                 null);
     }
 
@@ -251,12 +321,24 @@ public class MainFragment extends Fragment {
                 default: return;
             }
 
+
             if ( SensorManager.getRotationMatrix( rMat, iMat, gData, mData ) ) {
                 mAzimuth= (int) ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
             }
             if (Now_Geoposition != null) Now_Geoposition.setDirection(mAzimuth);
         }
     };
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

@@ -24,6 +24,7 @@ public class SplashScreen extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         MapKitFactory.setApiKey("d80212c2-0e79-43e5-b249-7e7612d3f566");
+
         if(user != null){
             startMainActivityAuth(firebaseAuth);
         } else {
