@@ -1,4 +1,4 @@
-package com.samsungschool.umbrellaproject.Fragments.NavigationItems;
+package com.samsungschool.umbrellaproject.Fragments.NavigationItems.ProfileFragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +25,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
+        setToolBarListener();
         return binding.getRoot();
     }
 
@@ -32,5 +33,14 @@ public class ProfileFragment extends Fragment {
     public void onDestroy() {
         binding = null;
         super.onDestroy();
+    }
+
+    private void setToolBarListener(){
+        binding.toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().onBackPressed();
+            }
+        });
     }
 }

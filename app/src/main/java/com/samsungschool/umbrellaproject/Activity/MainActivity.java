@@ -11,11 +11,11 @@ import android.view.WindowManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.samsungschool.umbrellaproject.Fragments.NavigationItems.AboutFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.AboutFragment.AboutFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryFragment;
 import com.samsungschool.umbrellaproject.Fragments.MainFragment;
-import com.samsungschool.umbrellaproject.Fragments.NavigationItems.ProfileFragment;
-import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.ProfileFragment.ProfileFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragment.SettingsFragment;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.ActivityMainBinding;
 
@@ -60,14 +60,12 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
 
 
     private void startFragment(Fragment fragment, String arg) {
-        if (arg.equals("main")) {
-            binding.materialToolbar2.setVisibility(View.GONE);
-        } else {
-            binding.materialToolbar2.setVisibility(View.VISIBLE);
-        }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
+                .add(R.id.fragmentContainer, fragment)
+                .setCustomAnimations(R.anim.scale_from_center, R.anim.scale_from_center)
+                .addToBackStack(null)
                 .commit();
+
     }
 
     private void itemSelector(){

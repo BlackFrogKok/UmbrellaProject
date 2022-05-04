@@ -7,15 +7,18 @@
     android:background="?attr/colorPrimary"
     >
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="248dp"
-        android:layout_height="127dp"
-        android:text="@string/settingsInfo"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="@string/settings_item"
+        app:titleTextColor="?attr/colorOnPrimary"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.619"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        app:navigationIcon="@drawable/abc_ic_clear_material" />
 </androidx.constraintlayout.widget.ConstraintLayout>

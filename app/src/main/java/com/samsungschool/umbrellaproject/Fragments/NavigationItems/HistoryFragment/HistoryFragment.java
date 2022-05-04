@@ -38,6 +38,16 @@ public class HistoryFragment extends Fragment {
         binding = FragmentHistoryBinding.inflate(getLayoutInflater());
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setAdapter(new HistoryAdapter(historyItems));
+        setToolBarListener();
         return binding.getRoot();
+    }
+
+    private void setToolBarListener(){
+        binding.toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().onBackPressed();
+            }
+        });
     }
 }
