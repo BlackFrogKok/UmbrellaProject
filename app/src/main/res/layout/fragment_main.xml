@@ -36,9 +36,9 @@
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconSize="80dp"
-        app:cornerRadius="50dp"
-        android:backgroundTint="?attr/colorSecondary"
-        app:iconTint="@color/teal_200"
+        app:cornerRadius="40dp"
+
+        app:iconTint="?attr/colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

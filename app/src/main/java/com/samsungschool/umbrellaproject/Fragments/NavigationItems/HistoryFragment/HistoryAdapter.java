@@ -34,6 +34,10 @@ public class HistoryAdapter extends RecyclerView.Adapter {
         return historyItems.size();
     }
 
+    public void notifyChanged(){
+        notifyDataSetChanged();
+    }
+
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder{
 
@@ -44,7 +48,9 @@ public class HistoryAdapter extends RecyclerView.Adapter {
         }
 
         public void setBinding(HistoryItem historyItem) {
-            binding.textView.setText(historyItem.getDate().toString());
+            binding.textView.setText(historyItem.getAddress());
+            binding.textView2.setText(historyItem.getDate());
+            binding.textView3.setText(historyItem.getTime());
         }
     }
 }

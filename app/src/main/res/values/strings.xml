@@ -25,6 +25,13 @@
     <string name="help_item">Help</string>
     <string name="about_item">About app</string>
 
+    <!-- History -->
+    <string name="take">Taking</string>
+    <string name="put">Putting</string>
+    <string name="date">Date:</string>
+    <string name="address">Address</string>
+    <string name="time">Time</string>
+    <string name="clear">Clear history</string>
 
 
 

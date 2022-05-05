@@ -2,15 +2,16 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="5dp"
     android:background="?attr/colorSecondary"
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp"
-    app:cardMaxElevation="10dp"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true"
-    android:padding="16dp">
+
+
+
+
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,8 +21,31 @@
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/address"
+            android:autoSizeTextType="uniform"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="137dp"
             android:layout_height="wrap_content"
-            android:text="@string/test" />
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="10dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="start"
+            android:text="@string/date" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="193dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/textView2"
+            android:autoSizeTextType="uniform"
+            android:gravity="end"
+            android:text="@string/time" />
 
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

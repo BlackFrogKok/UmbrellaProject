@@ -1,27 +1,47 @@
 package com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment;
 
-public class HistoryItem {
-    private Integer date = 0;
-    private Integer duration  = 0;
+import com.samsungschool.umbrellaproject.Station;
 
-    public HistoryItem(Integer date){
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+
+public class HistoryItem {
+    //todo with firebase
+    private String address;
+    private String time;
+    private String date;
+
+
+    public HistoryItem(String address, String time, String date){
+        this.address = address;
+        this.time = time;
         this.date = date;
-        this.duration = 0;
+
     }
 
-    public Integer getDate() {
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Integer date) {
+    public void setDate(String date) {
         this.date = date;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
     }
 }

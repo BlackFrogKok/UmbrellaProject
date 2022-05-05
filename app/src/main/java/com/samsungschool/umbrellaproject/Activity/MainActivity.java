@@ -60,9 +60,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
 
 
     private void startFragment(Fragment fragment, String arg) {
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                 .add(R.id.fragmentContainer, fragment)
-                .setCustomAnimations(R.anim.scale_from_center, R.anim.scale_from_center)
                 .addToBackStack(null)
                 .commit();
 
