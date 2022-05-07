@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.AboutFragment.AboutFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryFragment;
 import com.samsungschool.umbrellaproject.Fragments.MainFragment;
@@ -19,10 +20,13 @@ import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragm
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.ActivityMainBinding;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity implements MainFragment.onNavBtnClickListener {
     private ActivityMainBinding binding;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore dataBase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +42,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         dataBase = FirebaseFirestore.getInstance();
 
 
-
-
-
         binding.navigationDrawer
                 .getHeaderView(0)
                 .findViewById(R.id.userAvatar)
@@ -53,23 +54,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                 });
         itemSelector();
 
-
-
-
     }
 
-
-    private void startFragment(Fragment fragment, String arg) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                .add(R.id.fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit();
-
-    }
-
-    private void itemSelector(){
+    private void itemSelector() {
         binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
             binding.getRoot().close();
             switch (item.getItemId()) {
@@ -90,10 +77,27 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     startFragment(AboutFragment.newInstance(), "about");
                     binding.materialToolbar2.setTitle(R.string.about_item);
                     return true;
+                case R.id.nav_qr:
+                    startQRActivity();
+
                 default:
                     return false;
             }
         });
+    }
+
+    private void startQRActivity(){
+
+    }
+
+    private void startFragment(Fragment fragment, String arg) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .add(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
+
     }
 
     @Override
@@ -101,16 +105,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         binding.getRoot().open();
     }
 
-    public WindowManager getWindowManager(){
-        return (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+    public WindowManager getWindowManager() {
+        return (WindowManager) getSystemService(Context.WINDOW_SERVICE);
     }
 
 
     public SensorManager getManager() {
         return (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     }
-
-
 
 
 }
