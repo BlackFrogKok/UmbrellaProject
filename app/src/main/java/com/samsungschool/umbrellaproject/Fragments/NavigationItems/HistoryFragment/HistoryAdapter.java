@@ -8,24 +8,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.samsungschool.umbrellaproject.databinding.ItemHistoryBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryAdapter extends RecyclerView.Adapter {
-    List<HistoryItem> historyItems;
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemViewHolder> {
+    List<HistoryItem> historyItems = new ArrayList<HistoryItem>();
 
-    public HistoryAdapter(List<HistoryItem> historyItems){
+    public void setHistoryItems(List<HistoryItem> historyItems) {
         this.historyItems = historyItems;
+        notifyChanged();
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemHistoryBinding binding = ItemHistoryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ItemViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         ((ItemViewHolder) holder).setBinding(historyItems.get(position));
     }
 
