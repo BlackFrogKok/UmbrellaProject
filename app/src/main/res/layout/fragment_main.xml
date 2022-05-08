@@ -26,7 +26,7 @@
         android:id="@+id/navBtn"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/qrScanerBtn"
+        android:id="@+id/qrScannerBtn"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:insetLeft="0dp"

@@ -106,7 +106,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             p = (PlacemarkMapObject) mapObject;
             p.setIcon(ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker_on_pressed)));
             moveCamera(p.getGeometry(), 17.0f);
-            binding.qrScanerBtn.setVisibility(View.GONE);
+            binding.qrScannerBtn.setVisibility(View.GONE);
             bottomSheetVisibilityChanged(true);
             return true;
         }
@@ -116,7 +116,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
             if(newState == 4){
-                binding.qrScanerBtn.setVisibility(View.VISIBLE);
+                binding.qrScannerBtn.setVisibility(View.VISIBLE);
                 p.setIcon(ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
             }
         }
@@ -152,6 +152,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         mapview = binding.mapView;
         firestoreDataBase = new FirestoreDataBase();
         mapview.getMap().setNightModeEnabled(true);
+
 
 
         mGravity = manager.getDefaultSensor( Sensor.TYPE_GRAVITY );
@@ -256,7 +257,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
         bottomSheetVisibilityChanged(false);
 
-        binding.qrScanerBtn.setOnClickListener(new View.OnClickListener() {
+        binding.qrScannerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).startQRActivity();

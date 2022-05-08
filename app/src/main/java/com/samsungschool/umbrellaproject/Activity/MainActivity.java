@@ -23,6 +23,7 @@ import com.samsungschool.umbrellaproject.Fragments.NavigationItems.AboutFragment
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryFragment;
 import com.samsungschool.umbrellaproject.Fragments.MainFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.ProfileFragment.ProfileFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.QRReadFragment.QrFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragment.SettingsFragment;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.ActivityMainBinding;
@@ -93,16 +94,28 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     return true;
                 case R.id.nav_qr:
                     startQRActivity();
+
                 default:
                     return false;
             }
         });
     }
 
+
     public void startQRActivity(){
-        Intent intent = new Intent(this, QrActivity.class);
-        mStartForResult.launch(intent);
+    Intent intent = new Intent(this, QrActivity.class);
+    mStartForResult.launch(intent);
     }
+    //дим, я ебал в рот фрагменты
+    private void startQRFragment(){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.fragmentContainer, new QrFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+    //это пиздец как криво работает, оставлю активность
 
     private void startFragment(Fragment fragment, String arg) {
         getSupportFragmentManager()
