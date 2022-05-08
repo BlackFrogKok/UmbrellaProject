@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
     mStartForResult.launch(intent);
     }
 
-    //дим, я ебал в рот фрагменты
+    
     private void startQRFragment(){
         getSupportFragmentManager()
                 .beginTransaction()
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                 .addToBackStack(null)
                 .commit();
     }
-    //это пиздец как криво работает, оставлю активность
+    
 
     private void startFragment(Fragment fragment, String arg) {
         getSupportFragmentManager()
