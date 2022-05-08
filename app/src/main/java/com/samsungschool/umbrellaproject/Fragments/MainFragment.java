@@ -10,7 +10,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +18,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
-import com.samsungschool.umbrellaproject.ClusterListenerClass;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
-import com.samsungschool.umbrellaproject.OnLoadDataListener;
+import com.samsungschool.umbrellaproject.Interface.OnLoadDataListener;
 import com.samsungschool.umbrellaproject.R;
+import com.samsungschool.umbrellaproject.TextImageProvider;
 import com.samsungschool.umbrellaproject.databinding.FragmentMainBinding;
 import com.yandex.mapkit.Animation;
-import com.yandex.mapkit.GeoObjectCollection;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.location.FilteringMode;
@@ -45,6 +40,9 @@ import com.yandex.mapkit.location.LocationListener;
 import com.yandex.mapkit.location.LocationManager;
 import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.Cluster;
+import com.yandex.mapkit.map.ClusterListener;
+import com.yandex.mapkit.map.ClusterTapListener;
 import com.yandex.mapkit.map.ClusterizedPlacemarkCollection;
 import com.yandex.mapkit.map.IconStyle;
 import com.yandex.mapkit.map.MapObject;
@@ -52,35 +50,21 @@ import com.yandex.mapkit.map.MapObjectTapListener;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.map.RotationType;
 import com.yandex.mapkit.mapview.MapView;
-import com.yandex.mapkit.search.Address;
-import com.yandex.mapkit.search.Response;
 import com.yandex.mapkit.search.SearchFactory;
-import com.yandex.mapkit.search.SearchManager;
-import com.yandex.mapkit.search.SearchManagerType;
-import com.yandex.mapkit.search.SearchOptions;
-import com.yandex.mapkit.search.SearchType;
-import com.yandex.mapkit.search.Session;
-import com.yandex.runtime.Error;
 import com.yandex.runtime.image.ImageProvider;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements ClusterListener, ClusterTapListener {
 
     private static final double DESIRED_ACCURACY = 1;
     private static final long MINIMAL_TIME = 1000;
@@ -100,6 +84,11 @@ public class MainFragment extends Fragment {
     private FirebaseFirestore dataBase;
     private FirestoreDataBase firestoreDataBase;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private static boolean initialized = false;
+    private static final String API_KEY = "d80212c2-0e79-43e5-b249-7e7612d3f566";
+    private MainActivity activity;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private PlacemarkMapObject p;
 
 
     private int mAzimuth = 0; // degree
@@ -109,6 +98,33 @@ public class MainFragment extends Fragment {
     boolean haveGravity = false;
     boolean haveAccelerometer = false;
     boolean haveMagnetometer = false;
+
+    private MapObjectTapListener mapObjectTapListener = new MapObjectTapListener() {
+        @Override
+        public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
+            if(p != null) p.setIcon(ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
+            p = (PlacemarkMapObject) mapObject;
+            p.setIcon(ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker_on_pressed)));
+            moveCamera(p.getGeometry(), 17.0f);
+            binding.qrScanerBtn.setVisibility(View.GONE);
+            bottomSheetVisibilityChanged(true);
+            return true;
+        }
+    };
+
+    private BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
+        @Override
+        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            if(newState == 4){
+                binding.qrScanerBtn.setVisibility(View.VISIBLE);
+                p.setIcon(ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
+            }
+        }
+
+        @Override
+        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+        }
+    };
 
 
     public static MainFragment newInstance() {
@@ -120,7 +136,8 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        MapKitFactory.initialize(this.getContext());
+
+        initialize(API_KEY, this.getContext());
         SearchFactory.initialize(this.getContext());
 
         context = getContext();
@@ -130,7 +147,7 @@ public class MainFragment extends Fragment {
             if(myLocation != null) moveCamera(myLocation, 17.0f);
         });
 
-        MainActivity activity = (MainActivity) getActivity();
+        activity = (MainActivity) getActivity();
         manager = activity.getManager();
         mapview = binding.mapView;
         firestoreDataBase = new FirestoreDataBase();
@@ -146,11 +163,10 @@ public class MainFragment extends Fragment {
 
 
 
-        firestoreDataBase.setOnOnCompleteDataListener(new OnLoadDataListener<List<DocumentSnapshot>>() {
+        firestoreDataBase.setOnCompleteDataListener(new OnLoadDataListener<List<DocumentSnapshot>>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onComplete(@NonNull Observable<List<DocumentSnapshot>> observable) {
-                Log.w("rxl", "kk");
                 Disposable disposable = observable
                         .subscribeOn(Schedulers.io())
                         .map(obj -> obj.stream()
@@ -160,15 +176,9 @@ public class MainFragment extends Fragment {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(output -> {
                             ClusterizedPlacemarkCollection clusterizedCollection =
-                                    mapview.getMap().getMapObjects().addClusterizedPlacemarkCollection(new ClusterListenerClass(getResources(), activity.getWindowManager()));
+                                    mapview.getMap().getMapObjects().addClusterizedPlacemarkCollection(MainFragment.this);
 
-                            clusterizedCollection.addTapListener(new MapObjectTapListener() {
-                                @Override
-                                public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
-                                    Toast.makeText(context,String.valueOf(point.getLatitude()) + String.valueOf(point.getLongitude()), Toast.LENGTH_SHORT).show();
-                                    return false;
-                                }
-                            });
+                            clusterizedCollection.addTapListener(mapObjectTapListener);
 
                             clusterizedCollection.addPlacemarks(output, ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)), new IconStyle());
 
@@ -188,10 +198,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onLocationUpdated(@NonNull Location location) {
                 if (myLocation == null) {
-                    mapview.getMap().move(
-                            new CameraPosition(location.getPosition(), 17.0f, 0.0f, 0.0f),
-                            new Animation(Animation.Type.SMOOTH, 1),
-                            null);
+                    moveCamera(location.getPosition(), 17.0f);
                     Now_Geoposition = mapview.getMap().getMapObjects().addPlacemark(location.getPosition());
                     Now_Geoposition.useCompositeIcon().setIcon("pin", ImageProvider.fromBitmap(getBitmap(R.drawable.ic_user_navi_pin)), new IconStyle().setRotationType(RotationType.ROTATE));
                     Now_Geoposition.useCompositeIcon().setIcon("icon", ImageProvider.fromBitmap(getBitmap(R.drawable.ic_user_marker)), new IconStyle().setRotationType(RotationType.ROTATE));
@@ -241,6 +248,14 @@ public class MainFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ConstraintLayout bottomSheetLayout = (ConstraintLayout) view.findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
+        bottomSheetVisibilityChanged(false);
+    }
 
     @Override
     public void onStart() {
@@ -264,6 +279,9 @@ public class MainFragment extends Fragment {
         compositeDisposable.clear();
         binding = null;
     }
+
+
+
 
     public interface onNavBtnClickListener {
         void onClick();
@@ -331,13 +349,34 @@ public class MainFragment extends Fragment {
 
 
 
+    private void initialize(String apiKey, Context context) {
+        if (initialized) {
+            return;
+        }
+
+        MapKitFactory.setApiKey(apiKey);
+        MapKitFactory.initialize(context);
+        initialized = true;
+    }
+
+    private void bottomSheetVisibilityChanged(boolean flag){
+        bottomSheetBehavior.setState(flag ? BottomSheetBehavior.STATE_EXPANDED : BottomSheetBehavior.STATE_COLLAPSED);
+    }
 
 
 
 
 
+    @Override
+    public void onClusterAdded(@NonNull Cluster cluster) {
+        cluster.getAppearance().setIcon(
+                new TextImageProvider(activity.getWindowManager(), Integer.toString(cluster.getSize())));;
+        cluster.addClusterTapListener(this);
+    }
 
-
-
-
+    @Override
+    public boolean onClusterTap(@NonNull Cluster cluster) {
+        moveCamera(cluster.getAppearance().getGeometry(), 13.0f);
+        return true;
+    }
 }
