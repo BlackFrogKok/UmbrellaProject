@@ -1,13 +1,20 @@
 package com.samsungschool.umbrellaproject.Activity;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,12 +27,18 @@ import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragm
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.ActivityMainBinding;
 
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity implements MainFragment.onNavBtnClickListener {
     private ActivityMainBinding binding;
+
+    private String qr;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore dataBase;
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == Activity.RESULT_OK){
+            qr = result.getData().getStringExtra("qr");
+            Toast.makeText(this,qr, Toast.LENGTH_SHORT).show();
+        }
+    });
 
 
     @Override
@@ -56,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
 
     }
 
+
     private void itemSelector() {
         binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
             binding.getRoot().close();
@@ -79,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     return true;
                 case R.id.nav_qr:
                     startQRActivity();
-
                 default:
                     return false;
             }
@@ -87,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
     }
 
     private void startQRActivity(){
-
+        Intent intent = new Intent(this, QrActivity.class);
+        mStartForResult.launch(intent);
     }
 
     private void startFragment(Fragment fragment, String arg) {
@@ -99,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                 .commit();
 
     }
+
 
     @Override
     public void onClick() {

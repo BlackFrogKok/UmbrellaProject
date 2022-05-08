@@ -2,9 +2,6 @@
     <string name="app_name">UmbrellaProject</string>
 
 
-
-
-
     <!-- Auth -->
     <string name="verificationPhoneText">Вход по номеру \n телефона</string>
     <string name="phoneFormat">+</string>
@@ -12,7 +9,6 @@
     <!-- Information on fragments -->
     <string name="settingsInfo">Настройки</string>
     <string name="aboutInfo">О приложении</string>
-
 
 
     <!-- Title of navigation view -->
@@ -34,16 +30,13 @@
     <string name="clear">Clear history</string>
 
 
-
-
-
     <!-- for developing -->
     <string name="temp">something info</string>
     <string name="test">bla-bla-bla smth must be here</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-
-
+    <!-- QR -->
+    <string name="qr_hint">Наведите камеру на QR-код</string>
 
 
 </resources>
