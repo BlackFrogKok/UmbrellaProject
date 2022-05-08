@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     return true;
                 case R.id.nav_qr:
                     startQRActivity();
-
                 default:
                     return false;
             }
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
     Intent intent = new Intent(this, QrActivity.class);
     mStartForResult.launch(intent);
     }
+
     //дим, я ебал в рот фрагменты
     private void startQRFragment(){
         getSupportFragmentManager()

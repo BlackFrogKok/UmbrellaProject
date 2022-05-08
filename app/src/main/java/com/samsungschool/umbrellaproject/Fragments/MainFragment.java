@@ -112,6 +112,10 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         }
     };
 
+
+
+
+
     private BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {

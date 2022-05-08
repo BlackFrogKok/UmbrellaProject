@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceCategory
+    app:title="Основные"
+    app:singleLineTitle="true">
+    <SwitchPreferenceCompat
+        app:defaultValue="true"
+        app:key="notifications"
+        app:title="Включить режим гигачада"/>
+
+    <Preference
+        app:key="feedback"
+        app:title="Поставить Диме лайк"
+        app:summary="Поставить Диме лайк"/>
+</PreferenceCategory>
+    <PreferenceCategory
+        app:title="Вид"
+        app:allowDividerBelow="true">
+        <SwitchPreferenceCompat
+            app:key="notifications"
+            app:title="Выиграть конкурс"/>
+
+        <Preference
+            app:key="feedback"
+            app:title="Send feedback"
+            app:summary="Report technical issues or suggest new features"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
