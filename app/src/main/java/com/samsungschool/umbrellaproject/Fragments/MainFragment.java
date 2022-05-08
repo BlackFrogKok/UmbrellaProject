@@ -255,6 +255,13 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
         bottomSheetVisibilityChanged(false);
+
+        binding.qrScanerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).startQRActivity();
+            }
+        });
     }
 
     @Override

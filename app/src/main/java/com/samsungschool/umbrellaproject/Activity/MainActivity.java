@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         });
     }
 
-    private void startQRActivity(){
+    public void startQRActivity(){
         Intent intent = new Intent(this, QrActivity.class);
         mStartForResult.launch(intent);
     }
