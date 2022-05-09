@@ -37,6 +37,9 @@
 
     <!-- QR -->
     <string name="qr_hint">Наведите камеру на QR-код</string>
-
+    <string name="enter_code">Ввести код вручную</string>
+    <string name="code">Код на киоске выдачи</string>
+    <string name="accept">Ok</string>
+    <string name="decline">Cancel</string>
 
 </resources>
