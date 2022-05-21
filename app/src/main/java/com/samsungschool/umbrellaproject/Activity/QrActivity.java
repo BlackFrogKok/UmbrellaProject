@@ -71,7 +71,7 @@ public class QrActivity extends AppCompatActivity implements EnterQRcodeFragment
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, String text) {
         Intent data = new Intent();
-        data.putExtra("qr", text);
+        data.putExtra("manual_сode", text);
         setResult(RESULT_OK, data);
         finish();
     }

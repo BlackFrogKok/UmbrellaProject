@@ -11,11 +11,11 @@ import com.yandex.runtime.image.ImageProvider;
 
 public class TextImageProvider extends ImageProvider {
 
-    private WindowManager manager;
+    private DisplayMetrics metrics;
     private final String text;
 
-    public TextImageProvider(WindowManager manager, String text){
-        this.manager = manager;
+    public TextImageProvider(DisplayMetrics metrics, String text){
+        this.metrics = metrics;
         this.text = text;
     }
 
@@ -27,8 +27,6 @@ public class TextImageProvider extends ImageProvider {
 
     @Override
     public Bitmap getImage() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        manager.getDefaultDisplay().getMetrics(metrics);
 
         Paint textPaint = new Paint();
         textPaint.setTextSize(15 * metrics.density);

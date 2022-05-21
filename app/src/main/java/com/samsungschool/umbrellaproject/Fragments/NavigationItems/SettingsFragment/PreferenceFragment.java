@@ -12,3 +12,4 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.menu_settings, rootKey);
     }
 }
+

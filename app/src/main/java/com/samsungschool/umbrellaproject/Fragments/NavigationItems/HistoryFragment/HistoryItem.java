@@ -12,6 +12,8 @@ public class HistoryItem {
     private String time;
     private String date;
 
+    public HistoryItem(){}
+
 
     public HistoryItem(String address, String time, String date){
         this.address = address;

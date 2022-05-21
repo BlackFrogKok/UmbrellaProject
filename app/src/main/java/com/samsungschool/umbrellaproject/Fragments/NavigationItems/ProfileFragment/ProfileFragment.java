@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.samsungschool.umbrellaproject.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment {
@@ -25,6 +26,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(getLayoutInflater());
+        binding.logOut.setOnClickListener(v -> FirebaseAuth.getInstance().signOut());
         setToolBarListener();
         return binding.getRoot();
     }

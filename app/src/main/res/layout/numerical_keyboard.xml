@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/numpadLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="3"
+    >
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:text="1"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:layout_marginEnd="20dp"
+        android:text="2"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:text="3"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:layout_marginBottom="10dp"
+        android:text="4"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:text="5"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:text="6"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:layout_marginBottom="10dp"
+        android:text="7"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:text="8"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:text="9"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonBack1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        app:iconTint="@color/black"
+        app:icon="@drawable/ic_baseline_backspace_24"
+        app:iconPadding="2dp"
+        app:iconSize="30sp"
+        app:iconGravity="textEnd"
+        android:layout_marginBottom="20dp"
+        />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:textSize="30sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:text="0"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        app:iconTint="?attr/colorOnSecondary"
+        app:icon="@drawable/ic_baseline_backspace_24"
+        app:iconPadding="2dp"
+        app:iconSize="30sp"
+        app:iconGravity="textEnd"
+        />
+
+
+
+
+</GridLayout>

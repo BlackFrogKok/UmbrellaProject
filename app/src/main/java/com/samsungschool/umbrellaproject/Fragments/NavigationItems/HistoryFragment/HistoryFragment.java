@@ -2,8 +2,10 @@ package com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragm
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.os.Build;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,36 +14,46 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.BaseProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.samsungschool.umbrellaproject.FirestoreDataBase;
 import com.samsungschool.umbrellaproject.R;
+import com.samsungschool.umbrellaproject.User;
 import com.samsungschool.umbrellaproject.databinding.FragmentHistoryBinding;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public class HistoryFragment extends Fragment {
     private HistoryAdapter historyAdapter;
     private FragmentHistoryBinding binding;
-    private List<HistoryItem> historyItems = new ArrayList<HistoryItem>(Arrays.asList(
-            new HistoryItem("Улица им. Федора Седова", "Аренда все еще идет", "20.11.2004"),
-        new HistoryItem("Улица Самсунга", "14 часов 32 минуты", "12.04.1924"),
-        new HistoryItem("Улица Покровка", "13 часов 32 минуты", "12.04.1923"),
-        new HistoryItem("Улица им. Нурлана", "14 часов 32 минуты", "12.04.1924"),
-        new HistoryItem("Улица им. Яны", "14 часов 32 минуты", "12.04.1324"),
-        new HistoryItem("Улица им. Тани", "15 часов 32 минуты", "12.04.924"),
-        new HistoryItem("Улица им. Евы", "14 часов 32 минуты", "12.04.1924"),
-        new HistoryItem("Улица им. Хорошего Api от яндекса", "14 часов 32 минуты", "12.04.1924"),
-        new HistoryItem("Улица Котлина", "16 часов 32 минуты", "12.04.1924"),
-        new HistoryItem("Улица Джавы", "14 часов 32 минуты", "12.04.1924")
-    ));
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public static HistoryFragment newInstance() {
         Bundle args = new Bundle();
@@ -51,7 +63,49 @@ public class HistoryFragment extends Fragment {
     }
 
     private void getData(){
-        historyAdapter.setHistoryItems(historyItems);
+        binding.progressBar.setVisibility(View.VISIBLE);
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("history")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            Disposable disposable = Observable
+                                    .fromArray(task.getResult().getDocuments())
+                                    .subscribeOn(Schedulers.io())
+                                    .map(list -> list.stream()
+                                            .map(l -> l.toObject(HistoryItem.class))
+                                            .collect(Collectors.toList())
+                                    )
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(historyItems -> {
+                                        binding.progressBar.setVisibility(View.GONE);
+                                        Log.w("document2", historyItems.toString());
+                                        if(historyItems.size() == 0){
+                                            binding.cleanHistory.setText("Пока что здесь ничего нет");
+                                        }else{
+                                            historyAdapter.setHistoryItems(historyItems);
+                                        }
+                                    }, throwable -> {
+                                        Log.w("document2", throwable.getMessage());
+                                    });
+                            compositeDisposable.add(disposable);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        binding.progressBar.setVisibility(View.GONE);
+                        Log.w("document2", "gg2");
+                    }
+                });
+
+
     }
 
 
@@ -84,7 +138,6 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(getLayoutInflater());
-
         return binding.getRoot();
     }
 
@@ -107,14 +160,14 @@ public class HistoryFragment extends Fragment {
             }
         });
 
-        binding.toolbar.getMenu().findItem(R.id.clear).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                historyItems.clear();
-                historyAdapter.notifyChanged();
-                return false;
-            }
-        });
+//        binding.toolbar.getMenu().findItem(R.id.clear).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                historyItems.clear();
+//                historyAdapter.notifyChanged();
+//                return false;
+//            }
+//        });
     }
 
     @Override
@@ -123,5 +176,9 @@ public class HistoryFragment extends Fragment {
         binding = null;
     }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeDisposable.clear();
+    }
 }

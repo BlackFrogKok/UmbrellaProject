@@ -6,16 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
-import com.samsungschool.umbrellaproject.Auth.SignInActivity;
-import com.yandex.mapkit.MapKitFactory;
+import com.samsungschool.umbrellaproject.Activity.Auth.SignInActivity;
+import com.samsungschool.umbrellaproject.databinding.ActivitySplashScreenBinding;
 
 import java.util.List;
 
@@ -23,6 +21,7 @@ public class SplashScreen extends AppCompatActivity {
 
 
     private ActivityResultLauncher<Intent> registrationGetResult;
+    private ActivitySplashScreenBinding binding;
 
     private PermissionListener permissionlistener = new PermissionListener() {
         @Override
@@ -41,6 +40,8 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         TedPermission.create()
                 .setPermissionListener(permissionlistener)
@@ -49,6 +50,7 @@ public class SplashScreen extends AppCompatActivity {
                 .check();
 
     }
+
 
     private void startMainActivityAuth(FirebaseAuth firebaseAuth){
         Intent intent = new Intent(this, MainActivity.class);

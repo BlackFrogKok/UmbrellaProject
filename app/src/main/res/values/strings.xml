@@ -41,5 +41,6 @@
     <string name="code">Код на киоске выдачи</string>
     <string name="accept">Ok</string>
     <string name="decline">Cancel</string>
+    <string name="phone_mask">(XXX) XXX-XX-XX</string>
 
 </resources>

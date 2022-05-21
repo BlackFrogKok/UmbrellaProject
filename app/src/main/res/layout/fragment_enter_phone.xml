@@ -4,15 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.samsungschool.umbrellaproject.Auth.SignInActivity">
+    android:background="?attr/colorSecondary"
+    tools:context=".Activity.Auth.SignInActivity">
+
+    
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneTextInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:backgroundTint="?attr/colorSecondary"
+        app:boxBackgroundMode="outline"
+        app:errorIconDrawable="@drawable/ic_baseline_phone_24"
+        app:errorTextColor="@color/blue"
+        app:hintEnabled="false"
+        app:layout_constraintBottom_toTopOf="@+id/continueBtn"
+        app:layout_constraintStart_toEndOf="@+id/ContryCodeEditText"
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView3">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/phone_mask"
+            android:inputType="phone"
+            android:maxLength="15"
+            android:textColor="?attr/colorOnSecondary"
+            android:textColorHint="?attr/colorOnSecondary"
+            android:theme="@style/MyEditText"
+            app:backgroundTint="?attr/colorOnSecondary" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/ContryCodeEditText"
+        android:layout_width="63dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:inputType="phone"
+        android:maxLength="4"
+        android:text="@string/phoneFormat"
+        android:textColor="?attr/colorOnSecondary"
+        app:backgroundTint="?attr/colorOnSecondary"
+        android:theme="@style/MyEditText"
+        app:layout_constraintBottom_toTopOf="@+id/continueBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView3"
+        />
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/materialTextView3"
-        android:layout_width="298dp"
-        android:layout_height="68dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/verificationPhoneText"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/phoneTextInputLayout"
@@ -21,60 +69,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phoneTextInputLayout"
-        android:layout_width="242dp"
-        android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/white"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp"
-        app:errorEnabled="true"
-        app:errorIconDrawable="@drawable/ic_baseline_phone_24"
-        app:errorIconTintMode="multiply"
-        app:hintEnabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.668"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="332dp">
 
-        <EditText
-            android:id="@+id/phoneEditText"
-            android:layout_width="257dp"
-            android:layout_height="wrap_content"
-            android:hint="(XXX) XXX-XX-XX"
-            android:inputType="phone"
-            android:maxLength="15"
-            android:theme="@style/MyEditText" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <EditText
-        android:id="@+id/ContryCodeEditText"
-        android:layout_width="63dp"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:maxLength="4"
-        android:text="@string/phoneFormat"
-        app:layout_constraintBottom_toTopOf="@+id/continueBtn"
-        app:layout_constraintEnd_toStartOf="@+id/phoneTextInputLayout"
-        app:layout_constraintHorizontal_bias="0.68"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialTextView3"
-        app:layout_constraintVertical_bias="0.492" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continueBtn"
         android:layout_width="342dp"
         android:layout_height="60dp"
+        android:layout_marginBottom="144dp"
         android:text="OK"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneTextInputLayout"
-        app:layout_constraintVertical_bias="0.423" />
+        app:layout_constraintHorizontal_bias="0.588"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

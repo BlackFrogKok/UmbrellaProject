@@ -6,10 +6,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -19,20 +21,21 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.UmbrellaProject"
-        android:windowFullscreen="true">
+        android:theme="@style/Theme.UmbrellaProject">
+
         <activity
             android:name=".Activity.QrActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".Auth.SignInActivity"
+            android:name=".Activity.Auth.SignInActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.SplashScreen"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashScreen">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
