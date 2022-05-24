@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.UmbrellaProject" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item  name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item  name="colorPrimary">@color/primaryColor_night</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor_night</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -12,9 +12,10 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorOnSurface">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSecondary</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
         <!-- Customize your theme here. -->
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">?attr/colorOnPrimary</item>
+
 
     </style>
 

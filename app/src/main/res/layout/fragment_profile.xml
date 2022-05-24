@@ -23,14 +23,48 @@
         app:navigationIcon="@drawable/abc_ic_clear_material" />
 
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:background="@color/blue"
-        android:id="@+id/logOut"
-        />
+        tools:layout_editor_absoluteX="-88dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/user_constraint"/>
+
+            <EditText
+                android:id="@+id/editTextTextPersonName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="okokok"
+                android:inputType="textPersonName"
+                android:text="Имя"
+                android:textAlignment="textStart" />
+
+            <EditText
+                android:id="@+id/editTextTextPersonName2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Пароль" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/logOut"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/fui_transparent"
+                android:text="Выйти"
+                android:textAlignment="textStart" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

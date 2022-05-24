@@ -6,10 +6,6 @@
             android:icon="@drawable/ic_qr"
             android:title="@string/qr_item" />
 
-        <item
-            android:id="@+id/nav_nfc"
-            android:icon="@drawable/ic_nfc"
-            android:title="@string/nfc_item" />
 
         <item
             android:id="@+id/nav_history"

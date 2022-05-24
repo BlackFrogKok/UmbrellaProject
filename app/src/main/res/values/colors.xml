@@ -14,9 +14,20 @@
     <color name="pin_normal">#6B767E</color>
 
 
-    <color name="primaryColor">#1565c0</color>
+    <color name="primaryColor_night">#1565c0</color>
+    <color name="primaryLightColor_night">#5e92f3</color>
+    <color name="primaryDarkColor_night">#003c8f</color>
+    <color name="secondaryColor_night">#0096a5</color>
+    <color name="secondaryLightColor_night">#56c7d6</color>
+    <color name="secondaryDarkColor_night">#006876</color>
+    <color name="primaryTextColor_night">#ffffff</color>
+    <color name="secondaryTextColor_night">#000000</color>
+    <color name="opacityToolBar_night">#80003c8f</color>
+
+
+    <color name="primaryColor">#14a1be</color>
     <color name="primaryLightColor">#5e92f3</color>
-    <color name="primaryDarkColor">#003c8f</color>
+    <color name="primaryDarkColor">#016f90</color>
     <color name="secondaryColor">#0096a5</color>
     <color name="secondaryLightColor">#56c7d6</color>
     <color name="secondaryDarkColor">#006876</color>

@@ -86,7 +86,7 @@ dependencies {
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
-
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
     implementation 'com.alimuzaffar.lib:pinentryedittext:2.0.6'
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'

@@ -1,30 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<PreferenceCategory
-    app:title="Основные"
-    app:singleLineTitle="true">
-    <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="notifications"
-        app:title="Включить режим гигачада"/>
 
-    <Preference
-        app:key="feedback"
-        app:title="Поставить Диме лайк"
-        app:summary="Поставить Диме лайк"/>
-</PreferenceCategory>
+    <PreferenceCategory
+        app:title="Основные"
+        app:allowDividerBelow="true"
+        >
+
+        <SwitchPreferenceCompat
+            app:key="light"
+            app:title="Включить легкий режим"/>
+        <SwitchPreferenceCompat
+            app:key="theme"
+            app:title="Включить режим разработчика"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Аккаунт"
+        app:allowDividerBelow="true">
+        <SwitchPreferenceCompat
+            app:key="auto"
+            app:title="Авто-вход"/>
+        <Preference
+            app:key="color"
+            app:title="Выйти"
+            app:summary="Выйти из аккаунта"/>
+    </PreferenceCategory>
+
     <PreferenceCategory
         app:title="Вид"
         app:allowDividerBelow="true">
         <SwitchPreferenceCompat
-            app:key="notifications"
-            app:title="Выиграть конкурс"/>
+            app:key="night"
+            app:title="Включить ночную тему"/>
+        <Preference
+            app:key="color"
+            app:title="Выбрать цвета"
+            app:summary="Сделайте свою тему"/>
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        app:title="Донат"
+        app:singleLineTitle="true">
+
 
         <Preference
-            app:key="feedback"
-            app:title="Send feedback"
-            app:summary="Report technical issues or suggest new features"/>
+            app:key="subs"
+            app:title="Подключить подписку"
+            app:summary=""/>
+        <Preference
+            app:key="like"
+            app:title="Поддержать разработчиков"
+            app:summary="Поставить Диме и Антону лайк"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
