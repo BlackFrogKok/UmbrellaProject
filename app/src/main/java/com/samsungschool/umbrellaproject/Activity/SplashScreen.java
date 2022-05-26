@@ -52,25 +52,24 @@ public class SplashScreen extends AppCompatActivity {
     }
 
 
-    private void startMainActivityAuth(FirebaseAuth firebaseAuth){
+    private void startMainActivityAuth(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private void startRegistrationActivity(FirebaseAuth firebaseAuth){
+    private void startRegistrationActivity(){
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void checkAuth(){
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
-            startMainActivityAuth(firebaseAuth);
+            startMainActivityAuth();
         } else {
-            startRegistrationActivity(firebaseAuth);
+            startRegistrationActivity();
         }
     }
 }

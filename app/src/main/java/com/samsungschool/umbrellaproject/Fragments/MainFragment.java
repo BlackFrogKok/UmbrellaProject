@@ -1,26 +1,37 @@
 package com.samsungschool.umbrellaproject.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.IntStream;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
@@ -46,13 +57,12 @@ import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.search.SearchFactory;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 public class MainFragment extends Fragment implements ClusterListener, ClusterTapListener,
@@ -72,6 +82,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     private PlacemarkMapObject curentPoint;
     private Integer uiThemeCode;
     private FirestoreDataBase firestoreDataBase;
+    private ConstraintLayout bottomSheetLayout;
 
     private ClusterizedPlacemarkCollection clusterizedCollection;
 
@@ -84,12 +95,9 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
 
 
-    private MapObjectTapListener mapObjectTapListener = new MapObjectTapListener() {
-        @Override
-        public boolean onMapObjectTap(@NonNull MapObject mapObject, @NonNull Point point) {
-            selectPoint((PlacemarkMapObject) mapObject);
-            return true;
-        }
+    private MapObjectTapListener mapObjectTapListener = (mapObject, point) -> {
+        selectPoint((PlacemarkMapObject) mapObject);
+        return true;
     };
 
 
@@ -97,10 +105,8 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             new BottomSheetBehavior.BottomSheetCallback() {
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            if(newState == 4){
-                binding.qrScannerBtn.setVisibility(View.VISIBLE);
-                curentPoint.setIcon(ImageProvider.
-                        fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
+            if(newState == BottomSheetBehavior.STATE_COLLAPSED){
+                closeBottomSheet();
             }
         }
 
@@ -109,7 +115,16 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         }
     };
 
-
+    private void closeBottomSheet() {
+        binding.qrScannerBtn.setVisibility(View.VISIBLE);
+        bottomSheetLayout.getViewById(R.id.bottom_sheet)
+                .findViewById(R.id.qr_check).setVisibility(View.VISIBLE);
+        bottomSheetLayout.getViewById(R.id.bottom_sheet)
+                .findViewById(R.id.get_umbrella).setVisibility(View.GONE);
+        curentPoint.setIcon(ImageProvider.
+                fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
+        stationID = "";
+    }
 
 
 
@@ -152,8 +167,6 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         }
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -202,85 +215,124 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         return binding.getRoot();
     }
 
+    private void showDialog(){
+        ConstraintLayout c = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.get_umbrella_dialog, null, false);
+
+        AlertDialog d = new MaterialAlertDialogBuilder(context)
+                .setCustomTitle(c)
+                .setNegativeButton("Отмена", (dialog, which) -> {
+                    firestoreDataBase.closeStation(stationID);
+                    bottomSheetVisibilityChanged(false);
+                })
+                .setPositiveButton("Забрал", (dialog, which) -> {
+                    firestoreDataBase.addHistory(stationID);
+                    firestoreDataBase.closeStation(stationID);
+                    bottomSheetVisibilityChanged(false);
+                })
+                .show();
+
+        CountDownTimer timer = new CountDownTimer(60000, 100) {
+        public void onTick(long millisUntilFinished) {
+            int seconds = (int) (millisUntilFinished / 1000);
+            CircularProgressIndicator circularProgressIndicator = c.findViewById(R.id.circularProgressIndicator);
+            TextView t = c.findViewById(R.id.textViewTimer);
+            circularProgressIndicator.setProgress((int)(millisUntilFinished / 60000.0 * 100));
+            t.setText(String.valueOf(seconds));
+        }
+        public void onFinish() {
+            firestoreDataBase.closeStation(stationID);
+            bottomSheetVisibilityChanged(false);
+            d.dismiss();
+        }
+    }.start();
+
+        d.setOnDismissListener(dialog -> {
+            timer.cancel();
+            d.setOnDismissListener(null);
+        });
+        d.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
+
+
+    }
+
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ConstraintLayout bottomSheetLayout = (ConstraintLayout) view
-                .findViewById(R.id.bottom_sheet_qr_check);
+        bottomSheetLayout = (ConstraintLayout) view
+                .findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
-        MaterialButton b1 = view.findViewById(R.id.button11);
-        MaterialButton b2 = view.findViewById(R.id.button12);
-        MaterialButton b3 = view.findViewById(R.id.button13);
-        MaterialButton b4 = view.findViewById(R.id.button14);
-        MaterialButton b5 = view.findViewById(R.id.button15);
-        MaterialButton b6 = view.findViewById(R.id.button16);
-        MaterialButton b7 = view.findViewById(R.id.button17);
         bottomSheetVisibilityChanged(false);
-        binding.qrScannerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.startQRActivity();
-            }
-        });
-        b1.setOnClickListener(v -> {
+        binding.qrScannerBtn.setOnClickListener(v -> activity.startQRActivity());
+        bottomSheetLayout.getViewById(R.id.qr_check).findViewById(R.id.bottomQrScannerBtn)
+                .setOnClickListener(v -> activity.startQRActivity());
+
+        ConstraintLayout getUmbrellaLayout = (ConstraintLayout) bottomSheetLayout.getViewById(R.id.get_umbrella);
+
+        getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> {
            firestoreDataBase.getUmbrella(1, stationID, new MyOnCompliteListener() {
                @Override
                public void OnComplite() {
-                   Toast.makeText(context, "Зонт выдан", Toast.LENGTH_SHORT).show();
+                   showDialog();
                }
            });
         });
 
-        b2.setOnClickListener(v -> {
+        getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> {
             firestoreDataBase.getUmbrella(2, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
-                    Toast.makeText(context, "Зонт выдан", Toast.LENGTH_SHORT).show();
+                    showDialog();
                 }
             });
         });
-        b3.setOnClickListener(v -> {
+        getUmbrellaLayout.getViewById(R.id.button3).setOnClickListener(v -> {
             firestoreDataBase.getUmbrella(3, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
-                    Toast.makeText(context, "Зонт выдан", Toast.LENGTH_SHORT).show();
+                    showDialog();
                 }
             });
         });
-        b4.setOnClickListener(v -> {
+        getUmbrellaLayout.getViewById(R.id.button4).setOnClickListener(v -> {
             firestoreDataBase.getUmbrella(4, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
-                    Toast.makeText(context, "Зонт выдан", Toast.LENGTH_SHORT).show();
+                    showDialog();
                 }
             });
         });
-        b5.setOnClickListener(v -> {
+        getUmbrellaLayout.getViewById(R.id.button5).setOnClickListener(v -> {
             firestoreDataBase.getUmbrella(5, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
-                    Toast.makeText(context, "Зонт выдан", Toast.LENGTH_SHORT).show();
+                    showDialog();
                 }
             });
         });
-        b6.setOnClickListener(v -> {
+        getUmbrellaLayout.getViewById(R.id.button6).setOnClickListener(v -> {
             firestoreDataBase.getUmbrella(6, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
-                    Toast.makeText(context, "Зонт выдан", Toast.LENGTH_SHORT).show();
+                    showDialog();
                 }
             });
         });
-        b7.setOnClickListener(v -> {
+        getUmbrellaLayout.getViewById(R.id.button7).setOnClickListener(v -> {
             firestoreDataBase.getUmbrella(7, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
-                    Toast.makeText(context, "Зонт выдан", Toast.LENGTH_SHORT).show();
+                    showDialog();
+
+
+
                 }
             });
         });
     }
+
 
     @Override
     public void onStart() {
@@ -374,6 +426,10 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     public void QrCheckComplite(@NonNull String stationID) {
         this.stationID = stationID;
         Log.w("document3",String.valueOf(viewModel.stationMapObject.getValue().get(stationID)) + "l");
+        bottomSheetLayout.getViewById(R.id.bottom_sheet)
+                .findViewById(R.id.qr_check).setVisibility(View.GONE);
+        bottomSheetLayout.getViewById(R.id.bottom_sheet)
+                .findViewById(R.id.get_umbrella).setVisibility(View.VISIBLE);
         selectPoint(viewModel.stationMapObject.getValue().get(stationID));
     }
 

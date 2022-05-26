@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                 public void onComplete(@NonNull String s) {
                     Log.w("document2", s);
                     ((QrCheckCompliteInterface) getSupportFragmentManager().findFragmentByTag("main")).QrCheckComplite(s);
+                }
+
+                @Override
+                public void onCanceled() {
+                    Toast.makeText(MainActivity.this, "Не правельный QR code.\nПожалуйста, повторите попытку", Toast.LENGTH_SHORT).show();
                 }
             });
         }

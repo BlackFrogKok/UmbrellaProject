@@ -13,13 +13,13 @@
 
     <!-- Title of navigation view -->
 
-    <string name="qr_item">QR read</string>
+    <string name="qr_item">QR код</string>
     <string name="nfc_item">NFC read</string>
-    <string name="history_item">History</string>
-    <string name="settings_item">Settings</string>
-    <string name="user_item">User</string>
-    <string name="help_item">Help</string>
-    <string name="about_item">About app</string>
+    <string name="history_item">История</string>
+    <string name="settings_item">Настройки</string>
+    <string name="user_item">Профиль</string>
+    <string name="help_item">Помощь</string>
+    <string name="about_item">О приложении</string>
 
     <!-- History -->
     <string name="take">Taking</string>
@@ -40,7 +40,11 @@
     <string name="enter_code">Ввести код вручную</string>
     <string name="code">Код на киоске выдачи</string>
     <string name="accept">Ok</string>
-    <string name="decline">Cancel</string>
+    <string name="decline">Отмена</string>
     <string name="phone_mask">(XXX) XXX-XX-XX</string>
+    <string name="newUserRegistrationText">Регистрация нового пользователя</string>
+    <string name="name">Имя</string>
+    <string name="mail">Почта</string>
+    <string name="ok">OK</string>
 
 </resources>

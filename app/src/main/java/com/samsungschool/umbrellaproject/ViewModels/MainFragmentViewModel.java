@@ -13,6 +13,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.annimon.stream.Collector;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.samsungschool.umbrellaproject.Compass;
@@ -32,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -145,12 +147,11 @@ public class MainFragmentViewModel extends AndroidViewModel {
 
     public void loadStationsPoint(){
         firestoreDataBase.getDataStations(new MyOnCompliteDataListener<List<DocumentSnapshot>>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onCompleteObservable(@NonNull Observable<List<DocumentSnapshot>> observable) {
                 Disposable disposable = observable
                         .subscribeOn(Schedulers.io())
-                        .map(s -> s.stream()
+                        .map(s -> Stream.of(s)
                                 .collect(Collectors.toMap(DocumentSnapshot::getId,
                                         FirestoreDataBase::castHashMapToPoint)))
                         .observeOn(AndroidSchedulers.mainThread())
@@ -163,6 +164,11 @@ public class MainFragmentViewModel extends AndroidViewModel {
 
             @Override
             public void onComplete(@NonNull List<DocumentSnapshot> documentSnapshots) {}
+
+            @Override
+            public void onCanceled() {
+                //TODO onCanceled loading Stations point
+            }
         });
     }
 

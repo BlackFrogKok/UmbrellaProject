@@ -60,7 +60,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@color/fui_transparent"
-                android:text="Выйти"
+                android:text="Выйти из аккаунта"
+                android:textColor="?attr/colorOnPrimary"
+                android:textAlignment="textStart" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/fui_transparent"
+                android:textColor="@color/red"
+                android:text="Удалить аккаунт"
                 android:textAlignment="textStart" />
 
 

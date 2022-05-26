@@ -12,12 +12,16 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryItem;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
 import com.yandex.mapkit.geometry.Point;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -64,13 +68,50 @@ public class FirestoreDataBase {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        listener.onCanceled();
                         FirebaseCrashlytics.getInstance().recordException(e);
                     }
                 });
     }
 
+    public void closeStation(String stationID){
+        dataBase.collection("stations")
+                .document(stationID)
+                .collection("auth")
+                .document("isIssued")
+                .update("issued", true)
+                .addOnCompleteListener(task -> {})
+                .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
+    }
+
+    private void getStationAdress(String stationID, OnCompleteListener<DocumentSnapshot> listener){
+        dataBase.collection("stations")
+                .document(stationID)
+                .get()
+                .addOnCompleteListener(listener)
+                .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
+
+    }
+
+    public void addHistory(String stationID){
+        getStationAdress(stationID, task -> {
+            if(task.isSuccessful()){
+                HistoryItem h = new HistoryItem();
+                h.setAddress(task.getResult().get("adress", String.class));
+                h.setDate(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date()));
+                h.setTime("Аренда всё ещё идёт");
+                dataBase.collection("users")
+                        .document(FirebaseAuth.getInstance().getUid())
+                        .collection("history")
+                        .add(h)
+                        .addOnCompleteListener(task1 -> {})
+                        .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
+            }
+        });
+
+    }
+
     public void getUmbrella(int umbrella, String stationID, MyOnCompliteListener listener){
-        Log.w("document1", stationID + "+");
         dataBase.collection("stations")
                 .document(stationID)
                 .update("umbrella", umbrella)

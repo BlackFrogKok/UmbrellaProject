@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -39,7 +41,6 @@ import com.samsungschool.umbrellaproject.databinding.FragmentHistoryBinding;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -70,14 +71,13 @@ public class HistoryFragment extends Fragment {
                 .collection("history")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             Disposable disposable = Observable
                                     .fromArray(task.getResult().getDocuments())
                                     .subscribeOn(Schedulers.io())
-                                    .map(list -> list.stream()
+                                    .map(list -> Stream.of(list)
                                             .map(l -> l.toObject(HistoryItem.class))
                                             .collect(Collectors.toList())
                                     )

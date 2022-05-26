@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         app:title="Основные"
@@ -8,44 +8,26 @@
         >
 
         <SwitchPreferenceCompat
-            app:key="light"
-            app:title="Включить легкий режим"/>
-        <SwitchPreferenceCompat
-            app:key="theme"
-            app:title="Включить режим разработчика"/>
+            app:key="push"
+            app:title="Включить Push-уведомления"/>
+        <SwitchPreference
+            app:key="langues"
+            app:title="Включить Push-уведомления"/>
+            />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        app:title="Аккаунт"
-        app:allowDividerBelow="true">
-        <SwitchPreferenceCompat
-            app:key="auto"
-            app:title="Авто-вход"/>
-        <Preference
-            app:key="color"
-            app:title="Выйти"
-            app:summary="Выйти из аккаунта"/>
-    </PreferenceCategory>
 
     <PreferenceCategory
         app:title="Вид"
         app:allowDividerBelow="true">
-        <SwitchPreferenceCompat
-            app:key="night"
-            app:title="Включить ночную тему"/>
-        <Preference
-            app:key="color"
-            app:title="Выбрать цвета"
-            app:summary="Сделайте свою тему"/>
+
     </PreferenceCategory>
 
 
     <PreferenceCategory
         app:title="Донат"
         app:singleLineTitle="true">
-
-
         <Preference
             app:key="subs"
             app:title="Подключить подписку"
