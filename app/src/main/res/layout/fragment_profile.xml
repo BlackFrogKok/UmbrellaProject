@@ -37,24 +37,6 @@
 
             <include layout="@layout/user_constraint"/>
 
-            <EditText
-                android:id="@+id/editTextTextPersonName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="okokok"
-                android:inputType="textPersonName"
-                android:text="Имя"
-                android:textAlignment="textStart" />
-
-            <EditText
-                android:id="@+id/editTextTextPersonName2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Пароль" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/logOut"
                 android:layout_width="match_parent"

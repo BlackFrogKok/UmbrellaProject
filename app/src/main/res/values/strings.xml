@@ -35,6 +35,13 @@
     <string name="test">bla-bla-bla smth must be here</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- Profile fragment -->
+    <string name="email">Почта</string>
+    <string name="telephone_number">Номер телефона</string>
+    <string name="exit">Выйти</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="description">Фанат зонтиков</string>
+
     <!-- QR -->
     <string name="qr_hint">Наведите камеру на QR-код</string>
     <string name="enter_code">Ввести код вручную</string>

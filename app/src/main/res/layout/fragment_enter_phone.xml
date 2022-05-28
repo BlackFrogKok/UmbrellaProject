@@ -13,35 +13,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="68dp"
         android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
-        android:inputType="phone"
-        android:layout_marginBottom="20dp"
         android:hint="Код страны"
-        android:textColorHint="?attr/colorOnSecondary"
+        android:inputType="phone"
         android:maxLength="4"
         android:text="+7"
         android:textColor="?attr/colorOnSecondary"
+        android:textColorHint="?attr/colorOnSecondary"
         android:theme="@style/MyEditText"
         app:backgroundTint="?attr/colorOnSecondary"
         app:layout_constraintBottom_toTopOf="@+id/continueBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
-
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView3"
+        app:layout_constraintVertical_bias="0.202" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phoneTextInputLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="40dp"
         android:backgroundTint="?attr/colorSecondary"
         app:boxBackgroundMode="outline"
         app:errorIconDrawable="@drawable/ic_baseline_phone_24"
         app:errorTextColor="@color/blue"
         app:hintEnabled="false"
 
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/ContryCodeEditText"
-        app:layout_constraintTop_toBottomOf="@+id/ContryCodeEditText2">
+        app:layout_constraintTop_toTopOf="@+id/ContryCodeEditText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/phoneEditText"
@@ -57,21 +59,22 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/ContryCodeEditText"
         android:layout_width="63dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:inputType="phone"
         android:maxLength="4"
         android:text="@string/phoneFormat"
         android:textColor="?attr/colorOnSecondary"
         android:theme="@style/MyEditText"
         app:backgroundTint="?attr/colorOnSecondary"
+        app:layout_constraintEnd_toStartOf="@+id/phoneTextInputLayout"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ContryCodeEditText2" />
-
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/materialTextView3"
@@ -82,25 +85,26 @@
         android:textColor="?attr/colorOnSecondary"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/phoneTextInputLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.137" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continueBtn"
         android:layout_width="342dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="270dp"
         android:text="@string/ok"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.913" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
