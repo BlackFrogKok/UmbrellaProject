@@ -22,22 +22,31 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/userName"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="@string/name"
         android:layout_marginTop="50dp"
+        android:textColor="?attr/colorOnSecondary"
+        android:textColorHint="?attr/colorOnSecondary"
+        android:theme="@style/MyEditText"
+        app:backgroundTint="?attr/colorOnSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
 
     <EditText
         android:layout_width="300dp"
+        android:id="@+id/userMail"
         android:layout_height="wrap_content"
         android:hint="@string/mail"
+        android:textColor="?attr/colorOnSecondary"
+        android:theme="@style/MyEditText"
+        android:textColorHint="?attr/colorOnSecondary"
+        app:backgroundTint="?attr/colorOnSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintTop_toBottomOf="@+id/userName"
         android:layout_marginTop="20dp"
         />
 

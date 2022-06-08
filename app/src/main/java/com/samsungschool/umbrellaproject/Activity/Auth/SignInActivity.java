@@ -1,6 +1,7 @@
 package com.samsungschool.umbrellaproject.Activity.Auth;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
 import com.samsungschool.umbrellaproject.Fragments.Auth.EnterCodeFragment;
+import com.samsungschool.umbrellaproject.Fragments.RegistrateNewUser;
 import com.samsungschool.umbrellaproject.Interface.AutoSetCodeInterfaces;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
 import com.samsungschool.umbrellaproject.R;
@@ -37,7 +39,7 @@ import com.samsungschool.umbrellaproject.Fragments.Auth.EnterPhoneFragment;
 
 import java.util.concurrent.TimeUnit;
 
-public class SignInActivity extends AppCompatActivity implements EnterPhoneFragment.onEnterPhoneListener, EnterCodeFragment.onEnterCodeFragmentListener{
+public class SignInActivity extends AppCompatActivity implements EnterPhoneFragment.onEnterPhoneListener, EnterCodeFragment.onEnterCodeFragmentListener, RegistrateNewUser.EnterUserData {
 
     private ActivitySignInBinding binding;
     private static final String EXAMPLE_FRAGMENT_TAG = "example_fragment";
@@ -66,7 +68,7 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
             mVerificationId = verificationId;
             forceResendingToken = token;
             binding.progressBar.setVisibility(View.GONE);
-            startFragment(EnterCodeFragment.newFragment(), "code");
+            startFragment(EnterCodeFragment.newFragment(user.getPhoneNumber()), "code");
         }
     };
 
@@ -77,7 +79,6 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         startFragment(EnterPhoneFragment.newFragment(), "phone");
-
     }
 
     private void startFragment(Fragment fragment, String arg) {
@@ -140,11 +141,16 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            createUserDocument(() -> {
-                                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                binding.progressBar.setVisibility(View.GONE);
-                                finish();
+                            isNewUser(task1 -> {
+                                if(task1.isSuccessful() & task1.getResult().exists()){
+                                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    finish();
+                                }else{
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    startFragment(RegistrateNewUser.newInstance(), "registrate");
+                                }
                             });
                         }
 
@@ -188,13 +194,23 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
+    private void isNewUser(OnCompleteListener<DocumentSnapshot> listener){
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(firebaseAuth.getUid())
+                .get()
+                .addOnCompleteListener(listener)
+                .addOnFailureListener(e -> {
+
+                });
+    }
+
     private void createUserDocument(MyOnCompliteListener listener) {
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(firebaseAuth.getUid())
                 .set(user)
                 .addOnCompleteListener(task -> {
-
                     listener.OnComplite();
                 })
                 .addOnFailureListener(e -> {
@@ -202,4 +218,17 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
                 });
     }
 
+    @Override
+    public void userData(String name, String mail) {
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+        user.setName(name);
+        user.setMail(mail);
+        createUserDocument(() -> {
+            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+            startActivity(intent);
+            binding.progressBar.setVisibility(View.GONE);
+            finish();
+        });
+    }
 }

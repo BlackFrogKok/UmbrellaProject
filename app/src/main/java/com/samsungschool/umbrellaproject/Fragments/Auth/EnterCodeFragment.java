@@ -18,10 +18,11 @@ public class EnterCodeFragment extends Fragment implements AutoSetCodeInterfaces
 
     private FragmentEnterCodeBinding binding;
     private String code = "";
-
-    public static Fragment newFragment(){
+    private onEnterCodeFragmentListener EnterCodeFragmentListener;
+    public static Fragment newFragment(String phoneNumber){
         Fragment fragment = new EnterCodeFragment();
         Bundle arguments = new Bundle();
+        arguments.putString("phone", phoneNumber);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -36,7 +37,7 @@ public class EnterCodeFragment extends Fragment implements AutoSetCodeInterfaces
         void ResetBtnCode(String phone);
     }
 
-    onEnterCodeFragmentListener EnterCodeFragmentListener;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,8 @@ public class EnterCodeFragment extends Fragment implements AutoSetCodeInterfaces
 
 
         binding = FragmentEnterCodeBinding.inflate(getLayoutInflater());
+        String phoneNumber = getArguments().getString("phone");
+        binding.smsCodeText.setText("Введите 6-значный код из SMS \nотправленной на номер\n" + phoneNumber);
         binding.buttons.button0.setOnClickListener(view -> addCodeSimbol("0"));
         binding.buttons.button1.setOnClickListener(view -> addCodeSimbol("1"));
         binding.buttons.button2.setOnClickListener(view -> addCodeSimbol("2"));

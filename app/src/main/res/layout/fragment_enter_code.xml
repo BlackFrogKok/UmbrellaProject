@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
         android:gravity="center"
-        android:text="Введите 6-значный код из SMS \nотправленной на номер\n+7(930) 678-87-90"
+        android:text="Введите 6-значный код из SMS \nотправленной на номер\n+x(xxx) xxx-xx-xx"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/txt_pin_entry"

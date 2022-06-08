@@ -18,6 +18,7 @@ import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
 import com.yandex.mapkit.geometry.Point;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,24 @@ public class FirestoreDataBase {
                         listener.onCanceled();
                         FirebaseCrashlytics.getInstance().recordException(e);
                     }
+                });
+    }
+
+    public void getUmbrellaCount(String stationID, MyOnCompliteDataListener<Integer> listener){
+        dataBase.collection("stations")
+                .document(stationID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            listener.onComplete(((ArrayList<Integer>)(task.getResult().get("freeUmbrella"))).size());
+                        }
+
+                    }
+                })
+                .addOnFailureListener(e -> {
                 });
     }
 

@@ -1,26 +1,19 @@
 package com.samsungschool.umbrellaproject.Fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -29,11 +22,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.IntStream;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
 import com.samsungschool.umbrellaproject.Interface.QrCheckCompliteInterface;
 import com.samsungschool.umbrellaproject.R;
@@ -49,7 +44,6 @@ import com.yandex.mapkit.map.ClusterListener;
 import com.yandex.mapkit.map.ClusterTapListener;
 import com.yandex.mapkit.map.ClusterizedPlacemarkCollection;
 import com.yandex.mapkit.map.IconStyle;
-import com.yandex.mapkit.map.MapObject;
 import com.yandex.mapkit.map.MapObjectTapListener;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.map.RotationType;
@@ -57,12 +51,11 @@ import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.search.SearchFactory;
 import com.yandex.runtime.image.ImageProvider;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+
+import io.reactivex.rxjava3.core.Observable;
 
 
 public class MainFragment extends Fragment implements ClusterListener, ClusterTapListener,
@@ -88,14 +81,17 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
     private List<PlacemarkMapObject> PlacemarkMapObjectClaster;
 
-    private Map<String, PlacemarkMapObject> mapStationPoint;
+    private BiMap<String, PlacemarkMapObject> mapStationPoint;
 
     private String stationID;
+
+    private ConstraintLayout getUmbrellaLayout;
 
 
 
 
     private MapObjectTapListener mapObjectTapListener = (mapObject, point) -> {
+        stationID = mapStationPoint.inverse().get(mapObject);
         selectPoint((PlacemarkMapObject) mapObject);
         return true;
     };
@@ -107,6 +103,40 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
             if(newState == BottomSheetBehavior.STATE_COLLAPSED){
                 closeBottomSheet();
+            }else if(newState == BottomSheetBehavior.STATE_EXPANDED){
+                firestoreDataBase.getUmbrellaCount(stationID, new MyOnCompliteDataListener<Integer>() {
+                    @Override
+                    public void onCompleteObservable(@NonNull Observable<Integer> observable) {}
+
+                    @Override
+                    public void onComplete(@NonNull Integer integer) {
+                        String text = "";
+                        switch (integer){
+                            case 0: text = "Нет свободных зонтов";
+                                break;
+                            case 1: text = "Свободен 1 зонт";
+                                break;
+                            case 2:text = "Свободо 2 зонта";
+                                break;
+                            case 3: text = "Свободно 3 зонта";
+                                break;
+                            case 4: text = "Свободно 4 зонта";
+                                break;
+                            case 5: text = "Свободно 5 зонтов";
+                                break;
+                            case 6: text = "Свободно 6 зонтов";
+                                break;
+                            case 7: text = "Свободно 7 зонтов";
+                                break;
+                        }
+
+                        TextView t = (TextView) bottomSheet.findViewById(R.id.countUmbrella);
+                        t.setText(text);
+                    }
+
+                    @Override
+                    public void onCanceled() {}
+                });
             }
         }
 
@@ -269,7 +299,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         bottomSheetLayout.getViewById(R.id.qr_check).findViewById(R.id.bottomQrScannerBtn)
                 .setOnClickListener(v -> activity.startQRActivity());
 
-        ConstraintLayout getUmbrellaLayout = (ConstraintLayout) bottomSheetLayout.getViewById(R.id.get_umbrella);
+        getUmbrellaLayout = (ConstraintLayout) bottomSheetLayout.getViewById(R.id.get_umbrella);
 
         getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> {
            firestoreDataBase.getUmbrella(1, stationID, new MyOnCompliteListener() {
@@ -433,9 +463,9 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         selectPoint(viewModel.stationMapObject.getValue().get(stationID));
     }
 
-    public static <K, V> Map<K, V> zipToMap(List<K> keys, List<V> values) {
-        return IntStream.range(0, keys.size()).boxed()
-                .collect(Collectors.toMap(keys::get, values::get));
+    public static <K, V> BiMap<K, V> zipToMap(List<K> keys, List<V> values) {
+        return HashBiMap.create(IntStream.range(0, keys.size()).boxed()
+                .collect(Collectors.toMap(keys::get, values::get)));
     }
 
 }

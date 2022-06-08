@@ -23,12 +23,9 @@
         android:textColorHint="?attr/colorOnSecondary"
         android:theme="@style/MyEditText"
         app:backgroundTint="?attr/colorOnSecondary"
-        app:layout_constraintBottom_toTopOf="@+id/continueBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialTextView3"
-        app:layout_constraintVertical_bias="0.202" />
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phoneTextInputLayout"
@@ -39,9 +36,7 @@
         app:errorIconDrawable="@drawable/ic_baseline_phone_24"
         app:errorTextColor="@color/blue"
         app:hintEnabled="false"
-
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/ContryCodeEditText"
         app:layout_constraintTop_toTopOf="@+id/ContryCodeEditText">
 
@@ -72,7 +67,6 @@
         android:theme="@style/MyEditText"
         app:backgroundTint="?attr/colorOnSecondary"
         app:layout_constraintEnd_toStartOf="@+id/phoneTextInputLayout"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ContryCodeEditText2" />
 
@@ -81,16 +75,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:layout_marginTop="200dp"
         android:text="@string/verificationPhoneText"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.137" />
+        />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continueBtn"
@@ -99,12 +92,10 @@
         android:text="@string/ok"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="80dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.913" />
+        app:layout_constraintTop_toBottomOf="@id/ContryCodeEditText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
