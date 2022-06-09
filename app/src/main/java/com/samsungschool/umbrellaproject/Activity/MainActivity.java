@@ -28,10 +28,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.AboutFragment.AboutFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryFragment;
 import com.samsungschool.umbrellaproject.Fragments.MainFragment;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryItem;
+import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryItemFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.NFCFragment.NfcFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.ProfileFragment.ProfileFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.QRReadFragment.QrFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragment.SettingsFragment;
+import com.samsungschool.umbrellaproject.Interface.MakeTransition;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
 import com.samsungschool.umbrellaproject.Interface.QrCheckCompliteInterface;
 import com.samsungschool.umbrellaproject.R;
@@ -80,21 +83,22 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         firebaseAuth = FirebaseAuth.getInstance();
         startFragment(MainFragment.newInstance(), "main");
         binding.materialToolbar2.setNavigationOnClickListener(v -> startFragment(MainFragment.newInstance(), "main"));
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-
-        if (mNfcAdapter == null) {
-            // Stop here, we definitely need NFC
-            Toast.makeText(this, "This device doesn’t support NFC.", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-
-        }
-
-        if (!mNfcAdapter.isEnabled()) {
-            Log.w("l225","NFC is disabled.");
-        } else {
-            Log.w("l225", "gg");
-        }
+//        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+//
+//
+//        if (mNfcAdapter == null) {
+//            // Stop here, we definitely need NFC
+//            Toast.makeText(this, "This device doesn’t support NFC.", Toast.LENGTH_LONG).show();
+//            finish();
+//            return;
+//
+//        }
+//
+//        if (!mNfcAdapter.isEnabled()) {
+//            Log.w("l225","NFC is disabled.");
+//        } else {
+//            Log.w("l225", "gg");
+//        }
 
 
 
@@ -142,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     return true;
 
                 case R.id.nav_about:
-                    startFragment(AboutFragment.newInstance(), "k");
-                    binding.materialToolbar2.setTitle(R.string.about_item);
+                    Intent intent = new Intent(this, IntroActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.nav_qr:
                     startQRActivity();
@@ -161,6 +165,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
     public void startQRActivity(){
     Intent intent = new Intent(this, QrActivity.class);
     mStartForResult.launch(intent);
+    }
+
+    public void startHistoryItemFragment(HistoryItem historyItem){
+        startFragment(HistoryItemFragment.newInstance(), "null");
     }
 
 
@@ -189,5 +197,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
         return metrics;
     }
+
 
 }

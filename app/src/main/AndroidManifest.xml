@@ -33,6 +33,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Activity.IntroActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".Activity.SplashScreen"
             android:exported="true"
             android:screenOrientation="portrait"

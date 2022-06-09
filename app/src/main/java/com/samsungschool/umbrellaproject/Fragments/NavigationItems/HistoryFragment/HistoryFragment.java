@@ -2,19 +2,16 @@ package com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragm
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,29 +22,19 @@ import com.annimon.stream.Stream;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.progressindicator.BaseProgressIndicator;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.samsungschool.umbrellaproject.FirestoreDataBase;
-import com.samsungschool.umbrellaproject.R;
-import com.samsungschool.umbrellaproject.User;
+import com.samsungschool.umbrellaproject.Activity.MainActivity;
+import com.samsungschool.umbrellaproject.Interface.MakeTransition;
+import com.samsungschool.umbrellaproject.Interface.UserCallback;
 import com.samsungschool.umbrellaproject.databinding.FragmentHistoryBinding;
 
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
@@ -55,6 +42,7 @@ public class HistoryFragment extends Fragment {
     private HistoryAdapter historyAdapter;
     private FragmentHistoryBinding binding;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private MakeTransition makeTransition;
 
     public static HistoryFragment newInstance() {
         Bundle args = new Bundle();
@@ -145,7 +133,12 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = binding.recyclerView;
-        historyAdapter = new HistoryAdapter();
+        historyAdapter = new HistoryAdapter(new UserCallback() {
+            @Override
+            public void onClick(HistoryItem historyItem) {
+                ((MainActivity)getActivity()).startHistoryItemFragment(historyItem);
+            }
+        });
         recyclerView.setAdapter(historyAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         setToolBarListener();
@@ -181,4 +174,5 @@ public class HistoryFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
     }
+
 }

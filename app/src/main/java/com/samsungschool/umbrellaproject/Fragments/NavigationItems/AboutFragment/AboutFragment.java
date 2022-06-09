@@ -1,5 +1,6 @@
 package com.samsungschool.umbrellaproject.Fragments.NavigationItems.AboutFragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.samsungschool.umbrellaproject.Activity.IntroActivity;
 import com.samsungschool.umbrellaproject.databinding.FragmentAboutBinding;
 
 public class AboutFragment extends Fragment {
@@ -24,6 +26,9 @@ public class AboutFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAboutBinding.inflate(getLayoutInflater());
         setToolBarListener();
+        Intent intent = new Intent(getActivity(), IntroActivity.class);
+        startActivity(intent);
+
         return binding.getRoot();
     }
 
