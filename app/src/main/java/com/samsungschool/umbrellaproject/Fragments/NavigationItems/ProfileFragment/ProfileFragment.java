@@ -38,7 +38,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setToolBarListener(){
-        binding.toolbar.setOnClickListener(new View.OnClickListener() {
+        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requireActivity().onBackPressed();

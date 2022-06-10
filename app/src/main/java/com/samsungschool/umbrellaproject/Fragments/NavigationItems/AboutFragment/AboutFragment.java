@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.samsungschool.umbrellaproject.Activity.IntroActivity;
+import com.samsungschool.umbrellaproject.BuildConfig;
 import com.samsungschool.umbrellaproject.databinding.FragmentAboutBinding;
 
 public class AboutFragment extends Fragment {
@@ -26,8 +27,8 @@ public class AboutFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAboutBinding.inflate(getLayoutInflater());
         setToolBarListener();
-        Intent intent = new Intent(getActivity(), IntroActivity.class);
-        startActivity(intent);
+        binding.textView14.setText("Версия: " + BuildConfig.VERSION_CODE);
+
 
         return binding.getRoot();
     }
@@ -40,7 +41,7 @@ public class AboutFragment extends Fragment {
     }
 
     private void setToolBarListener(){
-        binding.toolbar.setOnClickListener(new View.OnClickListener() {
+        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requireActivity().onBackPressed();

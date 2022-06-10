@@ -134,20 +134,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
             switch (item.getItemId()) {
                 case R.id.nav_user:
                     startFragment(ProfileFragment.newInstance(), "p");
-                    binding.materialToolbar2.setTitle(R.string.user_item);
+
                     return true;
                 case R.id.nav_settings:
                     startFragment(SettingsFragment.newInstance(), "s");
-                    binding.materialToolbar2.setTitle(R.string.settings_item);
                     return true;
                 case R.id.nav_history:
                     startFragment(HistoryFragment.newInstance(), "a");
-                    binding.materialToolbar2.setTitle(R.string.history_item);
                     return true;
-
-                case R.id.nav_about:
+                case R.id.nav_help:
                     Intent intent = new Intent(this, IntroActivity.class);
                     startActivity(intent);
+                    return true;
+                case R.id.nav_about:
+                    startFragment(AboutFragment.newInstance(), "a");
                     return true;
                 case R.id.nav_qr:
                     startQRActivity();
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
     }
 
     public void startHistoryItemFragment(HistoryItem historyItem){
-        startFragment(HistoryItemFragment.newInstance(), "null");
+        replaceFragment(HistoryItemFragment.newInstance(historyItem), "null");
     }
 
 
@@ -180,6 +180,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                 .add(R.id.fragmentContainer, fragment, arg)
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+    private void replaceFragment(Fragment fragment, String arg) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.fragmentContainer, fragment, arg)
                 .addToBackStack(null)
                 .commit();
 

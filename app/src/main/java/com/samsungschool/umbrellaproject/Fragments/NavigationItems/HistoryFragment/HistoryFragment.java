@@ -51,6 +51,8 @@ public class HistoryFragment extends Fragment {
         return fragment;
     }
 
+
+
     private void getData(){
         binding.progressBar.setVisibility(View.VISIBLE);
         FirebaseFirestore.getInstance()
