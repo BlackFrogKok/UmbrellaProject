@@ -8,21 +8,20 @@
     tools:context=".Activity.Auth.SignInActivity">
 
 
-    <com.google.android.material.textfield.TextInputEditText
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/ContryCodeEditText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="68dp"
         android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
+        android:background="@drawable/line"
+        android:textSize="20sp"
         android:hint="Код страны"
-        android:inputType="phone"
-        android:maxLength="4"
         android:text="+7"
         android:textColor="?attr/colorOnSecondary"
         android:textColorHint="?attr/colorOnSecondary"
         android:theme="@style/MyEditText"
-        app:backgroundTint="?attr/colorOnSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
@@ -37,8 +36,8 @@
         app:errorTextColor="@color/blue"
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ContryCodeEditText"
-        app:layout_constraintTop_toTopOf="@+id/ContryCodeEditText">
+        app:layout_constraintStart_toEndOf="@+id/CountryCodeEditText"
+        app:layout_constraintTop_toTopOf="@+id/CountryCodeEditText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/phoneEditText"
@@ -56,13 +55,12 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/ContryCodeEditText"
+        android:id="@+id/CountryCodeEditText"
         android:layout_width="63dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:inputType="phone"
-        android:maxLength="4"
-        android:text="@string/phoneFormat"
+        android:inputType="numberSigned"
+        android:maxLength="6"
         android:textColor="?attr/colorOnSecondary"
         android:theme="@style/MyEditText"
         app:backgroundTint="?attr/colorOnSecondary"
@@ -95,7 +93,7 @@
         android:layout_marginTop="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ContryCodeEditText" />
+        app:layout_constraintTop_toBottomOf="@id/CountryCodeEditText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

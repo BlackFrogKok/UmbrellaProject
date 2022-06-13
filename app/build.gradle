@@ -98,5 +98,7 @@ dependencies {
 
     implementation 'com.annimon:stream:1.2.2'
 
+    implementation 'com.github.mukeshsolanki:country-picker-android:2.0.4'
+
 
 }

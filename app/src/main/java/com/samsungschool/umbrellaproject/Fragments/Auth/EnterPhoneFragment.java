@@ -9,10 +9,16 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mukesh.countrypicker.Country;
+import com.mukesh.countrypicker.CountryPicker;
+import com.mukesh.countrypicker.listeners.OnCountryPickerListener;
+import com.samsungschool.umbrellaproject.Activity.Auth.SignInActivity;
 import com.samsungschool.umbrellaproject.databinding.FragmentEnterPhoneBinding;
 
 import ru.tinkoff.decoro.MaskImpl;
@@ -24,6 +30,8 @@ import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 public class EnterPhoneFragment extends Fragment {
 
     private FragmentEnterPhoneBinding binding;
+    private CountryPicker picker;
+    private FormatWatcher formatWatcherCodCountry;
 
     public static Fragment newFragment() {
         Fragment fragment = new EnterPhoneFragment();
@@ -42,15 +50,31 @@ public class EnterPhoneFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentEnterPhoneBinding.inflate(getLayoutInflater());
+        binding.ContryCodeEditText2.setOnClickListener(v -> picker.showBottomSheet((SignInActivity)getActivity()));
+        binding.ContryCodeEditText2.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(i == KeyEvent.KEYCODE_ENTER || i == KeyEvent.KEYCODE_BACK){
+                    System.out.println("11111111111");
+                    binding.CountryCodeEditText.setFocusable(false);
+                    binding.CountryCodeEditText.setFocusableInTouchMode(false);
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
 
         Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("(___) ___-__-__");
         FormatWatcher formatWatcherPhone = new MaskFormatWatcher(MaskImpl.createTerminated(slots));
 
         Slot[] slotsCodeContry = new UnderscoreDigitSlotsParser().parseSlots("+____");
-        FormatWatcher formatWatcherCodCountry = new MaskFormatWatcher(MaskImpl.createTerminated(slotsCodeContry));
+        formatWatcherCodCountry = new MaskFormatWatcher(MaskImpl.createTerminated(slotsCodeContry));
 
         formatWatcherPhone.installOn(binding.phoneEditText);
-        formatWatcherCodCountry.installOn(binding.ContryCodeEditText);
+        formatWatcherCodCountry.installOn(binding.CountryCodeEditText);
+
+        changeCountryCode(picker.getCountryFromSIM());
 
         binding.continueBtn.setOnClickListener(v -> {
             String s = formatWatcherCodCountry.getMask().toString() + formatWatcherPhone.getMask().toUnformattedString();
@@ -64,9 +88,29 @@ public class EnterPhoneFragment extends Fragment {
         });
     }
 
+    private void changeCountryCode(Country country){
+        if(country != null & !binding.CountryCodeEditText.hasFocus()){
+            binding.CountryCodeEditText.setText(country.getDialCode());
+            binding.ContryCodeEditText2.setText(country.getDialCode() + " (" + country.getName() + ")");
+        } else if(country != null & binding.CountryCodeEditText.hasFocus()){
+            binding.ContryCodeEditText2.setText(country.getDialCode() + " (" + country.getName() + ")");
+        }else {
+            binding.ContryCodeEditText2.setText("Неверно введён код страны");
+        }
+
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        CountryPicker.Builder builder = new CountryPicker.Builder().with(context).canSearch(true)
+                .listener(new OnCountryPickerListener() {
+                    @Override
+                    public void onSelectCountry(Country country) {
+                        changeCountryCode(country);
+                    }
+                });
+        picker = builder.build();
         try {
             phoneEnterListener = (onEnterPhoneListener) context;
         } catch (ClassCastException e) {
@@ -79,8 +123,7 @@ public class EnterPhoneFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-
-        binding.ContryCodeEditText.addTextChangedListener(new TextWatcher(){
+        binding.CountryCodeEditText.addTextChangedListener(new TextWatcher(){
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -96,7 +139,11 @@ public class EnterPhoneFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if(binding.CountryCodeEditText.hasFocus()){
+                    Log.w("test1", formatWatcherCodCountry.getMask().toUnformattedString());
+                    changeCountryCode(picker.getCountryByDialCode(formatWatcherCodCountry.getMask().toUnformattedString()));
+                    System.out.println("1");
+                }
             }
         });
 
