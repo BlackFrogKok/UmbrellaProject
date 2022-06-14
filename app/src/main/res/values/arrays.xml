@@ -6,6 +6,16 @@
         <item>Системная</item>
     </string-array>
 
+    <string-array name="language">
+        <item>Русский</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="ui_theme_values">
         <item>1</item>
         <item>2</item>

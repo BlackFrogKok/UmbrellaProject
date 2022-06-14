@@ -10,10 +10,15 @@
         <SwitchPreferenceCompat
             app:key="push"
             app:title="Включить Push-уведомления"/>
-        <SwitchPreference
-            app:key="langues"
-            app:title="Включить Push-уведомления"/>
-            />
+
+        <DropDownPreference
+            android:key="language"
+            android:title="Язык приложения"
+            android:entries="@array/language"
+            android:defaultValue="3"
+            app:useSimpleSummaryProvider="true"
+            android:entryValues="@array/language_values"/>
+
 
     </PreferenceCategory>
 
@@ -21,6 +26,16 @@
     <PreferenceCategory
         app:title="Вид"
         app:allowDividerBelow="true">
+
+        <DropDownPreference
+            android:key="ui_theme"
+            android:title="Тема приложения"
+            android:entries="@array/ui_theme"
+            android:defaultValue="3"
+            android:icon="@drawable/ic_baseline_keyboard_arrow_right_24"
+            android:dialogIcon="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:useSimpleSummaryProvider="true"
+            android:entryValues="@array/ui_theme_values"/>
 
     </PreferenceCategory>
 

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -103,7 +104,10 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
             if(newState == BottomSheetBehavior.STATE_COLLAPSED){
                 closeBottomSheet();
-            }else if(newState == BottomSheetBehavior.STATE_EXPANDED){
+            }else if(!stationID.equals("100_msk") & newState == BottomSheetBehavior.STATE_EXPANDED ){
+                Toast.makeText(getContext(), "Станция не обслуживается", Toast.LENGTH_SHORT).show();
+            }
+            else if(newState == BottomSheetBehavior.STATE_EXPANDED){
                 firestoreDataBase.getUmbrellaCount(stationID, new MyOnCompliteDataListener<Integer>() {
                     @Override
                     public void onCompleteObservable(@NonNull Observable<Integer> observable) {}
@@ -355,9 +359,6 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                 @Override
                 public void OnComplite() {
                     showDialog();
-
-
-
                 }
             });
         });
@@ -443,7 +444,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     public void onClusterAdded(@NonNull Cluster cluster) {
         cluster.getAppearance().setIcon(
                 new TextImageProvider(activity.getDisplayMetrics(),
-                        Integer.toString(cluster.getSize())));;
+                        Integer.toString(cluster.getSize())));
         cluster.addClusterTapListener(this);
     }
 

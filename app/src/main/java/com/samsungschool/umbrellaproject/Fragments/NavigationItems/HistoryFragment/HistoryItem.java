@@ -10,10 +10,15 @@ import java.time.LocalDateTime;
 
 
 public class HistoryItem implements Parcelable {
-    //todo with firebase
     private String address;
     private String time;
     private String date;
+    private String stationGetID;
+    private String stationPutID;
+    private String timeGet;
+    private String timePut;
+    private boolean status;
+
 
     public HistoryItem(){}
 
@@ -75,11 +80,53 @@ public class HistoryItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(timePut);
+        dest.writeString(timeGet);
+        dest.writeString(stationPutID);
+        dest.writeString(stationGetID);
         dest.writeString(address);
         dest.writeString(time);
         dest.writeString(date);
     }
 
 
+    public String getStationGetID() {
+        return stationGetID;
+    }
+
+    public void setStationGetID(String stationGetID) {
+        this.stationGetID = stationGetID;
+    }
+
+    public String getStationPutID() {
+        return stationPutID;
+    }
+
+    public void setStationPutID(String stationPutID) {
+        this.stationPutID = stationPutID;
+    }
+
+    public String getTimeGet() {
+        return timeGet;
+    }
+
+    public void setTimeGet(String timeGet) {
+        this.timeGet = timeGet;
+    }
+
+    public String getTimePut() {
+        return timePut;
+    }
+
+    public void setTimePut(String timePut) {
+        this.timePut = timePut;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }

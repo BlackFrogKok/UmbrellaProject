@@ -29,6 +29,7 @@ public class EnterCodeFragment extends Fragment implements AutoSetCodeInterfaces
 
     @Override
     public void setCode(String code) {
+        this.code = code;
         binding.txtPinEntry.setText(code);
     }
 
@@ -95,4 +96,5 @@ public class EnterCodeFragment extends Fragment implements AutoSetCodeInterfaces
 
         return binding.getRoot();
     }
+
 }

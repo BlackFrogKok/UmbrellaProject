@@ -99,12 +99,7 @@ public class MainFragmentViewModel extends AndroidViewModel {
         }
     };
 
-    private Compass.CompassListener CompassListener = new Compass.CompassListener() {
-        @Override
-        public void onOrientationChanged(float azimuth, float pitch, float roll) {
-            _userAzimuth.postValue((int) azimuth);
-        }
-    };
+    private Compass.CompassListener CompassListener = (azimuth, pitch, roll) -> _userAzimuth.postValue((int) azimuth);
 
     //----------------------------ViewModel-----------------------------------//
 

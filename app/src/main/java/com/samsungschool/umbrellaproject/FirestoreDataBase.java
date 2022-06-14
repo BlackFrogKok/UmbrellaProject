@@ -41,37 +41,25 @@ public class FirestoreDataBase {
         dataBase.collection("stations")
                 .document(documentID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
                         listener.onComplete(task.getResult());
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                    }
-                });
+                .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
     }
 
     public void getDataStations(MyOnCompliteDataListener<List<DocumentSnapshot>> listener) {
         dataBase.collection("stations")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            listener.onCompleteObservable(Observable.fromArray(task.getResult().getDocuments()));
-                        }
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        listener.onCompleteObservable(Observable.fromArray(task.getResult().getDocuments()));
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        listener.onCanceled();
-                        FirebaseCrashlytics.getInstance().recordException(e);
-                    }
+                .addOnFailureListener(e -> {
+                    listener.onCanceled();
+                    FirebaseCrashlytics.getInstance().recordException(e);
                 });
     }
 
@@ -79,15 +67,11 @@ public class FirestoreDataBase {
         dataBase.collection("stations")
                 .document(stationID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    @SuppressWarnings("unchecked")
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
-                            listener.onComplete(((ArrayList<Integer>)(task.getResult().get("freeUmbrella"))).size());
-                        }
-
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        listener.onComplete(((ArrayList<Integer>)(task.getResult().get("freeUmbrella"))).size());
                     }
+
                 })
                 .addOnFailureListener(e -> {
                 });
@@ -112,13 +96,31 @@ public class FirestoreDataBase {
 
     }
 
+    public void getUser(String uID, MyOnCompliteDataListener<User> listener){
+        dataBase.collection("users")
+                .document(uID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            listener.onComplete(task.getResult().toObject(User.class));
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
+
+    }
+
     public void addHistory(String stationID){
         getStationAdress(stationID, task -> {
             if(task.isSuccessful()){
                 HistoryItem h = new HistoryItem();
                 h.setAddress(task.getResult().get("adress", String.class));
+                h.setStatus(false);
                 h.setDate(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date()));
                 h.setTime("Аренда всё ещё идёт");
+                h.setStationGetID(stationID);
                 dataBase.collection("users")
                         .document(FirebaseAuth.getInstance().getUid())
                         .collection("history")

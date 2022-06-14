@@ -92,7 +92,6 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
 
     @Override
     public void ContinueBtnPhone(String phone) {
-        Toast.makeText(this, phone, Toast.LENGTH_SHORT).show();
         if (TextUtils.isEmpty(phone)){
             Toast.makeText(this, "Введите номер телефона", Toast.LENGTH_SHORT).show();
         }
@@ -127,6 +126,7 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
 
     @Override
     public void onBackPressed() {
+        binding.progressBar.setVisibility(View.GONE);
         if(getSupportFragmentManager().getBackStackEntryCount() == 1){
             finish();
         }
@@ -156,11 +156,11 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
 
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SignInActivity.this, "Ошибка" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                .addOnFailureListener(e -> {
+                    binding.progressBar.setVisibility(View.GONE);
+                    ((AutoSetCodeInterfaces) getSupportFragmentManager().findFragmentByTag("code"))
+                            .setCode("");
+                    Toast.makeText(SignInActivity.this, "Ошибка:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 

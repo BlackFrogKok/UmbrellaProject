@@ -18,7 +18,7 @@ public class Station {
     private final FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
 
 
-    public void checkQrData(String result, Context context, MyOnCompliteDataListener<String> listener){
+    public void checkQrData(String result, MyOnCompliteDataListener<String> listener){
         String[] subStr;
         subStr = result.split("-");
         if (subStr.length == 2){
@@ -29,6 +29,31 @@ public class Station {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if(task.isSuccessful() &
                                     task.getResult().get("securityWord").equals(subStr[0])){
+                                listener.onComplete(subStr[1]);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            FirebaseCrashlytics.getInstance().recordException(e);
+                            Log.w("document2", e.getMessage());
+                        }
+                    });
+        }
+    }
+
+    public void checkCode(String result, MyOnCompliteDataListener<String> listener){
+        String[] subStr;
+        subStr = result.split("-");
+        if (subStr.length == 2){
+            dataBase.collection("stations").document(subStr[1])
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful() &
+                                    task.getResult().get("securityCode").equals(subStr[0])){
                                 listener.onComplete(subStr[1]);
                             }
                         }
