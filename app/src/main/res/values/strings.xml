@@ -40,6 +40,7 @@
     <string name="telephone_number">Номер телефона</string>
     <string name="exit">Выйти</string>
     <string name="delete_account">Удалить аккаунт</string>
+    <string name="logout_account">Выйти из аккаунта</string>
     <string name="description">Фанат зонтиков</string>
 
     <!-- QR -->
@@ -53,5 +54,7 @@
     <string name="name">Имя</string>
     <string name="mail">Почта</string>
     <string name="ok">OK</string>
+
+
 
 </resources>

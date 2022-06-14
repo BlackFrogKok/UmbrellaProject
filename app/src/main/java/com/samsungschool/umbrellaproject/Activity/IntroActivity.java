@@ -18,31 +18,31 @@ public class IntroActivity extends AppIntro {
         setColorTransitionsEnabled(true);
 
         addSlide(AppIntroFragment.createInstance(
-                "Slide 1",
-                "slide 1 description",
-                R.drawable.station,
-                R.color.primaryColor
+                "Возьмите зонт",
+                "С помощью камеры отсканируйте QR-код на экране станции и начните аренду",
+                R.drawable.ic_baseline_north_24,
+                R.color.slide_1
 
         ));
         addSlide(AppIntroFragment.createInstance(
-                "Slide 1",
-                "slide 1 description",
-                R.drawable.station,
-                R.color.primaryColor_night
+                "Дойдите до назначения",
+                "Используйте зонт во время внезапного дождя",
+                R.drawable.ic_baseline_umbrella_24,
+                R.color.slide_2
 
         ));
         addSlide(AppIntroFragment.createInstance(
-                "Slide 1",
-                "slide 1 description",
-                R.drawable.station,
-                com.firebase.ui.auth.R.color.colorPrimary
+                "Верните зонт",
+                "Доберитесь до цели и оставьте зонтик в ближайшей станции",
+                R.drawable.ic_baseline_south_24,
+                R.color.slide_3
 
         ));
         addSlide(AppIntroFragment.createInstance(
-                "Slide 1",
-                "slide 1 description",
-                R.drawable.station,
-                com.firebase.ui.auth.R.color.colorPrimaryDark
+                "Вы готовы!",
+                "",
+                R.drawable.ic_baseline_add_task_24,
+                R.color.slide_4
 
         ));
     }

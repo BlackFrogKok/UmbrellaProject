@@ -12,6 +12,10 @@
     <color name="gray">#393939</color>
     <color name="green">#00FF00</color>
     <color name="light_gray">#565656</color>
+    <color name="slide_1">#004378</color>
+    <color name="slide_2">#015598</color>
+    <color name="slide_3">#005FAC</color>
+    <color name="slide_4">#0063B3</color>
 
     <color name="pin_normal">#6B767E</color>
 
@@ -27,6 +31,7 @@
     <color name="opacityToolBar_night">#80003c8f</color>
 
 
+
     <color name="primaryColor">#14a1be</color>
     <color name="primaryLightColor">#5e92f3</color>
     <color name="primaryDarkColor">#016f90</color>
@@ -36,4 +41,6 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="opacityToolBar">#80003c8f</color>
+
+
 </resources>

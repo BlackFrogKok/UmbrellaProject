@@ -8,9 +8,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/userAvatarLayout"
-        android:layout_width="206dp"
+        android:layout_width="214dp"
         android:layout_height="214dp"
-        app:cardCornerRadius="100dp"
+        app:cardCornerRadius="120dp"
         app:cardElevation="30dp"
         app:layout_constraintBottom_toTopOf="@+id/textView14"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,13 +46,15 @@
 
     <TextView
         android:id="@+id/textView14"
-        android:layout_width="167dp"
-        android:layout_height="27dp"
-        android:text="тата"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.416" />
+        app:layout_constraintVertical_bias="0.649"
+        android:textColor="@color/white"
+        android:textSize="30sp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
