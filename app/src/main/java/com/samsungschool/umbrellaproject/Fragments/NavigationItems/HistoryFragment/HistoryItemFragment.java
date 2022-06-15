@@ -90,26 +90,27 @@ public class HistoryItemFragment extends Fragment implements DrivingSession.Driv
             public void onComplete(@NonNull DocumentSnapshot documentSnapshot) {
                 stationGet = FirestoreDataBase.castHashMapToPoint(documentSnapshot);
                 mapObjects.addPlacemark(stationGet, ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
+                if(historyItem.getStationPutID() != null){
+                    binding.textView27.setText(historyItem.getStationPutID());
+                    firestoreDataBase.getDocument(historyItem.getStationPutID(), new MyOnCompliteDataListener<DocumentSnapshot>() {
+                        @Override
+                        public void onCompleteObservable(@NonNull Observable<DocumentSnapshot> observable) {}
+
+                        @Override
+                        public void onComplete(@NonNull DocumentSnapshot documentSnapshot) {
+                            stationPut = FirestoreDataBase.castHashMapToPoint(documentSnapshot);
+                            mapObjects.addPlacemark(stationPut, ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
+                            initDriving();
+                        }
+                        @Override
+                        public void onCanceled() {}
+                    });
+                }
             }
             @Override
             public void onCanceled() {}
         });
-        if(historyItem.getStationPutID() != null){
-            binding.textView27.setText(historyItem.getStationPutID());
-            firestoreDataBase.getDocument(historyItem.getStationPutID(), new MyOnCompliteDataListener<DocumentSnapshot>() {
-                @Override
-                public void onCompleteObservable(@NonNull Observable<DocumentSnapshot> observable) {}
 
-                @Override
-                public void onComplete(@NonNull DocumentSnapshot documentSnapshot) {
-                    stationPut = FirestoreDataBase.castHashMapToPoint(documentSnapshot);
-                    mapObjects.addPlacemark(stationPut, ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
-                    initDriving();
-                }
-                @Override
-                public void onCanceled() {}
-            });
-        }
         if(historyItem.getTimePut() != null){
             binding.textView18.setText(historyItem.getTimePut());
         }
@@ -165,18 +166,21 @@ public class HistoryItemFragment extends Fragment implements DrivingSession.Driv
     }
 
     private void submitRequest() {
-        DrivingOptions drivingOptions = new DrivingOptions();
-        VehicleOptions vehicleOptions = new VehicleOptions();
-        ArrayList<RequestPoint> requestPoints = new ArrayList<>();
-        requestPoints.add(new RequestPoint(
-                stationGet,
-                RequestPointType.WAYPOINT,
-                null));
-        requestPoints.add(new RequestPoint(
-                stationPut,
-                RequestPointType.WAYPOINT,
-                null));
-        drivingSession = drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this);
+        if(stationGet != null & stationPut != null){
+            DrivingOptions drivingOptions = new DrivingOptions();
+            VehicleOptions vehicleOptions = new VehicleOptions();
+            ArrayList<RequestPoint> requestPoints = new ArrayList<>();
+            requestPoints.add(new RequestPoint(
+                    stationGet,
+                    RequestPointType.WAYPOINT,
+                    null));
+            requestPoints.add(new RequestPoint(
+                    stationPut,
+                    RequestPointType.WAYPOINT,
+                    null));
+            drivingSession = drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions, this);
+        }
+
     }
 
     private Bitmap getBitmap(int drawableRes) {
