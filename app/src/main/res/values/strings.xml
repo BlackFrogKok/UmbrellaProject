@@ -36,8 +36,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Profile fragment -->
-    <string name="email">Почта</string>
-    <string name="telephone_number">Номер телефона</string>
+    <string name="email">Почта:</string>
+    <string name="telephone_number">Телефон:</string>
     <string name="exit">Выйти</string>
     <string name="delete_account">Удалить аккаунт</string>
     <string name="logout_account">Выйти из аккаунта</string>

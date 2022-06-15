@@ -113,7 +113,7 @@ public class HistoryItemFragment extends Fragment implements DrivingSession.Driv
         if(historyItem.getTimePut() != null){
             binding.textView18.setText(historyItem.getTimePut());
         }
-        binding.textView21.setText(historyItem.isStatus() ? "Завершено" : "Аренда");
+        binding.textView21.setText(historyItem.isStatus() ? "Сдан" : "Аренда");
 
         return binding.getRoot();
     }
