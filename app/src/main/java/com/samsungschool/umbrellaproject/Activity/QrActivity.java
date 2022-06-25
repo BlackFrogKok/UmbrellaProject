@@ -52,42 +52,42 @@ public class QrActivity extends AppCompatActivity implements EnterQRcodeFragment
             DialogFragment enterQRcodeFragment = new EnterQRcodeFragment();
             enterQRcodeFragment.show(getSupportFragmentManager(), null);
         });
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (nfcAdapter == null){
-            Toast.makeText(this,"NO NFC Capabilities",
-                    Toast.LENGTH_SHORT).show();
-            finish();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getActivity(this,
-                    0, new Intent(this, getClass()).addFlags(
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP),
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        }else {
-            pendingIntent = PendingIntent.getActivity(this,
-                    0, new Intent(this, getClass()).addFlags(
-                            Intent.FLAG_ACTIVITY_SINGLE_TOP),
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-        }
+//        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+//        if (nfcAdapter == null){
+//            Toast.makeText(this,"NO NFC Capabilities",
+//                    Toast.LENGTH_SHORT).show();
+//            finish();
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            pendingIntent = PendingIntent.getActivity(this,
+//                    0, new Intent(this, getClass()).addFlags(
+//                            Intent.FLAG_ACTIVITY_SINGLE_TOP),
+//                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+//        }else {
+//            pendingIntent = PendingIntent.getActivity(this,
+//                    0, new Intent(this, getClass()).addFlags(
+//                            Intent.FLAG_ACTIVITY_SINGLE_TOP),
+//                    PendingIntent.FLAG_UPDATE_CURRENT);
+//        }
     }
     @Override
     protected void onResume() {
         super.onResume();
         mCodeScanner.startPreview();
-        assert nfcAdapter != null;
+//        assert nfcAdapter != null;
         //nfcAdapter.enableForegroundDispatch(context,pendingIntent,
         //                                    intentFilterArray,
         //                                    techListsArray)
-        nfcAdapter.enableForegroundDispatch(this,pendingIntent,null,null);
+//        nfcAdapter.enableForegroundDispatch(this,pendingIntent,null,null);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mCodeScanner.releaseResources();
-        if (nfcAdapter != null) {
-            nfcAdapter.disableForegroundDispatch(this);
-        }
+//        if (nfcAdapter != null) {
+//            nfcAdapter.disableForegroundDispatch(this);
+//        }
     }
 
     @Override

@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
 
                     @Override
                     public void onCanceled() {
-                        Toast.makeText(MainActivity.this, "Не правельный QR code.\nПожалуйста, повторите попытку", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Неправильный QR code.\nПожалуйста, повторите попытку", Toast.LENGTH_SHORT).show();
                     }
                 });
             }else if(code.length() > 6){
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
 
                     @Override
                     public void onCanceled() {
-                        Toast.makeText(MainActivity.this, "Не правельный QR code.\nПожалуйста, повторите попытку", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Неправильный QR code.\nПожалуйста, повторите попытку", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -1,6 +1,7 @@
 package com.samsungschool.umbrellaproject.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -52,9 +55,12 @@ import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.search.SearchFactory;
 import com.yandex.runtime.image.ImageProvider;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -87,6 +93,9 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     private String stationID;
 
     private ConstraintLayout getUmbrellaLayout;
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+    });
 
 
 
@@ -250,6 +259,8 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     }
 
     private void showDialog(){
+        String name = Calendar.getInstance().getTime().toString();
+
         ConstraintLayout c = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.get_umbrella_dialog, null, false);
 
         AlertDialog d = new MaterialAlertDialogBuilder(context)
@@ -259,7 +270,26 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                     bottomSheetVisibilityChanged(false);
                 })
                 .setPositiveButton("Забрал", (dialog, which) -> {
-                    firestoreDataBase.addHistory(stationID);
+
+                    firestoreDataBase.deleteUmbrella(stationID);
+                    binding.returnUmbrella.setVisibility(View.VISIBLE);
+                    binding.returnUmbrella.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ConstraintLayout umbrellaDialog = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_dialog, null, false);
+                            AlertDialog returnUmbrella = new MaterialAlertDialogBuilder(context)
+                                    .setCustomTitle(umbrellaDialog)
+                                    .setNegativeButton("Отмена", (dialog, which) ->{
+
+                                    })
+                                    .setPositiveButton("Вернуть", (dialog, which) -> {
+                                        firestoreDataBase.endHistory(stationID, name);
+                                        binding.returnUmbrella.setVisibility(View.INVISIBLE);
+                                    })
+                                    .show();
+                        }
+                    });
+                    firestoreDataBase.addHistory(stationID, name);
                     firestoreDataBase.closeStation(stationID);
                     bottomSheetVisibilityChanged(false);
                 })
@@ -288,6 +318,8 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
 
     }
+
+
 
 
 
@@ -433,6 +465,8 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         MapKitFactory.initialize(context);
         initialized = true;
     }
+
+
 
 
     private void bottomSheetVisibilityChanged(boolean flag){

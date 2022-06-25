@@ -9,6 +9,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -19,10 +21,14 @@ import com.yandex.mapkit.geometry.Point;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.SimpleTimeZone;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -33,16 +39,16 @@ public class FirestoreDataBase {
     private int count;
     private List<DocumentSnapshot> res;
 
-    public FirestoreDataBase(){
+    public FirestoreDataBase() {
 
     }
 
-    public void getDocument(String documentID, MyOnCompliteDataListener<DocumentSnapshot> listener){
+    public void getDocument(String documentID, MyOnCompliteDataListener<DocumentSnapshot> listener) {
         dataBase.collection("stations")
                 .document(documentID)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()) {
+                    if (task.isSuccessful()) {
                         listener.onComplete(task.getResult());
                     }
                 })
@@ -53,7 +59,7 @@ public class FirestoreDataBase {
         dataBase.collection("stations")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         listener.onCompleteObservable(Observable.fromArray(task.getResult().getDocuments()));
                     }
                 })
@@ -63,13 +69,13 @@ public class FirestoreDataBase {
                 });
     }
 
-    public void getUmbrellaCount(String stationID, MyOnCompliteDataListener<Integer> listener){
+    public void getUmbrellaCount(String stationID, MyOnCompliteDataListener<Integer> listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
-                        listener.onComplete(((ArrayList<Integer>)(task.getResult().get("freeUmbrella"))).size());
+                    if (task.isSuccessful()) {
+                        listener.onComplete(((ArrayList<Integer>) (task.getResult().get("freeUmbrella"))).size());
                     }
 
                 })
@@ -77,17 +83,18 @@ public class FirestoreDataBase {
                 });
     }
 
-    public void closeStation(String stationID){
+    public void closeStation(String stationID) {
         dataBase.collection("stations")
                 .document(stationID)
                 .collection("auth")
                 .document("isIssued")
                 .update("issued", true)
-                .addOnCompleteListener(task -> {})
+                .addOnCompleteListener(task -> {
+                })
                 .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
     }
 
-    private void getStationAdress(String stationID, OnCompleteListener<DocumentSnapshot> listener){
+    private void getStationAdress(String stationID, OnCompleteListener<DocumentSnapshot> listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .get()
@@ -96,14 +103,14 @@ public class FirestoreDataBase {
 
     }
 
-    public void getUser(String uID, MyOnCompliteDataListener<User> listener){
+    public void getUser(String uID, MyOnCompliteDataListener<User> listener) {
         dataBase.collection("users")
                 .document(uID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             listener.onComplete(task.getResult().toObject(User.class));
                         }
                     }
@@ -112,27 +119,53 @@ public class FirestoreDataBase {
 
     }
 
-    public void addHistory(String stationID){
+    public void addHistory(String stationID, String name) {
         getStationAdress(stationID, task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 HistoryItem h = new HistoryItem();
                 h.setAddress(task.getResult().get("adress", String.class));
                 h.setStatus(false);
                 h.setDate(new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(new Date()));
-                h.setTime("Аренда всё ещё идёт");
+                h.setTime("Аренда");
+                h.setTimeGet(getCurrentTime());
                 h.setStationGetID(stationID);
                 dataBase.collection("users")
                         .document(FirebaseAuth.getInstance().getUid())
                         .collection("history")
-                        .add(h)
-                        .addOnCompleteListener(task1 -> {})
+                        .document(name)
+                        .set(h)
+                        .addOnCompleteListener(task1 -> {
+                        })
                         .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
             }
         });
 
+
     }
 
-    public void getUmbrella(int umbrella, String stationID, MyOnCompliteListener listener){
+    public void endHistory(String stationID, String name) {
+        DocumentReference b = dataBase.collection("users")
+                .document(FirebaseAuth.getInstance().getUid())
+                .collection("history")
+                .document(name);
+        b.update("timePut", getCurrentTime());
+        b.update("time", "Сдан");
+
+
+    }
+
+    //доделать не забудь
+    public void deleteUmbrella(String stationID) {
+        dataBase.collection("stations")
+                .document(stationID)
+                .update("freeUmbrella", Arrays.asList(1, 2, 3, 4, 5, 6))
+                .addOnCompleteListener(task -> {
+                })
+                .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
+
+    }
+
+    public void getUmbrella(int umbrella, String stationID, MyOnCompliteListener listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .update("umbrella", umbrella)
@@ -167,7 +200,14 @@ public class FirestoreDataBase {
     }
 
     public static Point castHashMapToPoint(DocumentSnapshot document) {
-        HashMap hashMap = (HashMap)document.get("location");
-        return new Point((Double)hashMap.get("latitude"), (Double)hashMap.get("longitude"));
+        HashMap hashMap = (HashMap) document.get("location");
+        return new Point((Double) hashMap.get("latitude"), (Double) hashMap.get("longitude"));
+    }
+
+    private String getCurrentTime() {
+        String time;
+        Calendar calendar = Calendar.getInstance();
+        Log.d("TAG", calendar.getTime().toString());
+        return String.valueOf(calendar.getTime().getHours()) + ":" + String.valueOf(calendar.getTime().getMinutes());
     }
 }
