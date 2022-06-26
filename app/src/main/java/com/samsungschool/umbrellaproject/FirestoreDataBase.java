@@ -81,7 +81,34 @@ public class FirestoreDataBase {
                 })
                 .addOnFailureListener(e -> {
                 });
+
     }
+    //доделать
+    public int getFree(String stationID) {
+
+        final int ans;
+        dataBase.collection("stations")
+                .document(stationID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Integer> list = (ArrayList<Integer>) (task.getResult().get("freeUmbrella"));
+                        for (int i = 1; i < 8; i++) {
+
+
+                            if (list.contains(i)) {
+                            } else {
+
+                            }
+                        }
+                    }
+                }).addOnFailureListener(e -> {
+                });
+        return -1;
+
+
+    }
+
 
     public void closeStation(String stationID) {
         dataBase.collection("stations")
