@@ -177,25 +177,18 @@ public class FirestoreDataBase {
                 .document(name);
         b.update("timePut", getCurrentTime());
         b.update("time", "Сдан");
-        b.update("stationPutID", "100_msk");
+        b.update("stationPutID", stationID);
 
 
     }
 
-    //доделать не забудь
-    public void deleteUmbrella(String stationID) {
-        dataBase.collection("stations")
-                .document(stationID)
-                .update("freeUmbrella", Arrays.asList(1, 2, 3, 4, 5, 6))
-                .addOnCompleteListener(task -> {
-                })
-                .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
 
-    }
 
     public void getUmbrella(int umbrella, String stationID, MyOnCompliteListener listener) {
         dataBase.collection("stations")
                 .document(stationID)
+                .collection("auth")
+                .document("status")
                 .update("umbrella", umbrella)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -203,8 +196,44 @@ public class FirestoreDataBase {
                         dataBase.collection("stations")
                                 .document(stationID)
                                 .collection("auth")
-                                .document("isBusy")
-                                .update("busy", true)
+                                .document("status")
+                                .update("status", "giving")
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        listener.OnComplite();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        FirebaseCrashlytics.getInstance().recordException(e);
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        FirebaseCrashlytics.getInstance().recordException(e);
+                    }
+                });
+    }
+
+    public void returnUmbrella(int umbrella, String stationID, MyOnCompliteListener listener) {
+        dataBase.collection("stations")
+                .document(stationID)
+                .collection("auth")
+                .document("status")
+                .update("umbrella", umbrella)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        dataBase.collection("stations")
+                                .document(stationID)
+                                .collection("auth")
+                                .document("status")
+                                .update("status", "returning")
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {

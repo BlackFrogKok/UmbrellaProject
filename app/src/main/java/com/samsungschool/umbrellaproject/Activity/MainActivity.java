@@ -94,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     }
                 });
             }
+            else {
+                Toast.makeText(MainActivity.this, "Неправильный QR code.\nПожалуйста, повторите попытку", Toast.LENGTH_SHORT).show();
+            }
 
         }
     });
