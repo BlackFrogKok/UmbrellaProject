@@ -177,6 +177,7 @@ public class FirestoreDataBase {
                 .document(name);
         b.update("timePut", getCurrentTime());
         b.update("time", "Сдан");
+        b.update("stationPutID", "100_msk");
 
 
     }

@@ -30,7 +30,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.samsungschool.umbrellaproject.Activity.IntroActivity;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
+import com.samsungschool.umbrellaproject.Activity.QrActivity;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
 import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
@@ -93,9 +95,48 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     private Integer umbrella;
 
     private String stationID;
-
+    private String name = Calendar.getInstance().getTime().toString();
     private ConstraintLayout getUmbrellaLayout;
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        firestoreDataBase.getUmbrella(umbrella, "100_msk", new MyOnCompliteListener() {
+            @Override
+            public void OnComplite() {
+                ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
+                Log.d("TAG", "4");
+                AlertDialog fin = new MaterialAlertDialogBuilder(context)
+                        .setCustomTitle(c1)
+                        .setNegativeButton("Отмена", (dialog1, which1) -> {
+                            firestoreDataBase.closeStation("100_msk");
+
+                        })
+                        .setPositiveButton("Вернул", (dialog1, which1) -> {
+                            firestoreDataBase.closeStation("100_msk");
+                            firestoreDataBase.endHistory("100_msk", name);
+                            binding.returnUmbrella.setVisibility(View.INVISIBLE);
+                        })
+                        .show();
+                CountDownTimer timer = new CountDownTimer(60000, 100) {
+                    public void onTick(long millisUntilFinished) {
+                        int seconds = (int) (millisUntilFinished / 1000);
+                        CircularProgressIndicator circularProgressIndicator = c1.findViewById(R.id.circularProgressIndicator);
+                        TextView t = c1.findViewById(R.id.textViewTimer);
+                        circularProgressIndicator.setProgress((int) (millisUntilFinished / 60000.0 * 100));
+                        t.setText(String.valueOf(seconds));
+                    }
+
+                    public void onFinish() {
+                        firestoreDataBase.closeStation(stationID);
+                        bottomSheetVisibilityChanged(false);
+                        fin.dismiss();
+                    }
+                }.start();
+                fin.setOnDismissListener(dialog -> {
+                    timer.cancel();
+                    fin.setOnDismissListener(null);
+                });
+                fin.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
+            }
+        });
 
     });
 
@@ -267,7 +308,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     }
 
     private void showDialog() {
-        String name = Calendar.getInstance().getTime().toString();
+
         ConstraintLayout c = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.get_umbrella_dialog, null, false);
         AlertDialog d = new MaterialAlertDialogBuilder(context)
                 .setCustomTitle(c)
@@ -291,34 +332,22 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
                                     })
                                     .setPositiveButton("Вернуть", (dialog, which) -> {
-                                        ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
-                                        firestoreDataBase.getUmbrella(firestoreDataBase.getFree(stationID), stationID, new MyOnCompliteListener() {
-                                            @Override
-                                            public void OnComplite() {
-                                            }
-                                        });
-                                        Log.d("TAG", String.valueOf(firestoreDataBase.getFree(stationID)));
-                                        AlertDialog fin = new MaterialAlertDialogBuilder(context)
-                                                .setCustomTitle(c1)
-                                                .setNegativeButton("Отмена", (dialog1, which1) -> {
-                                                    firestoreDataBase.closeStation(stationID);
 
-                                                })
-                                                .setPositiveButton("Вернул", (dialog1, which1) -> {
-                                                    firestoreDataBase.closeStation(stationID);
-                                                    firestoreDataBase.endHistory(stationID, name);
-                                                    binding.returnUmbrella.setVisibility(View.INVISIBLE);
-                                                })
-                                                .show();
+                                        Intent intent = new Intent(requireActivity(), QrActivity.class);
+                                        mStartForResult.launch(intent);
+
+
 
 
                                     })
                                     .show();
+                            returnUmbrella.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
                         }
                     });
                     bottomSheetVisibilityChanged(false);
                 })
                 .show();
+
 
         CountDownTimer timer = new CountDownTimer(60000, 100) {
             public void onTick(long millisUntilFinished) {
@@ -364,6 +393,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             firestoreDataBase.getUmbrella(1, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
+                    umbrella = 1;
                     showDialog();
                 }
             });
@@ -373,6 +403,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             firestoreDataBase.getUmbrella(2, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
+                    umbrella = 2;
                     showDialog();
                 }
             });
@@ -381,6 +412,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             firestoreDataBase.getUmbrella(3, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
+                    umbrella = 3;
                     showDialog();
                 }
             });
@@ -389,6 +421,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             firestoreDataBase.getUmbrella(4, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
+                    umbrella = 4;
                     showDialog();
                 }
             });
@@ -397,6 +430,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             firestoreDataBase.getUmbrella(5, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
+                    umbrella = 5;
                     showDialog();
                 }
             });
@@ -405,6 +439,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             firestoreDataBase.getUmbrella(6, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
+                    umbrella = 6;
                     showDialog();
                 }
             });
@@ -413,6 +448,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             firestoreDataBase.getUmbrella(7, stationID, new MyOnCompliteListener() {
                 @Override
                 public void OnComplite() {
+                    umbrella = 7;
                     showDialog();
                 }
             });
