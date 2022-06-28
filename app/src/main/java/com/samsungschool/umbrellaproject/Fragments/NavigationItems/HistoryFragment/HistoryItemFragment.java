@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteDataListener;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.databinding.FragmentHistoryitemBinding;
 import com.yandex.mapkit.MapKitFactory;
@@ -82,7 +81,7 @@ public class HistoryItemFragment extends Fragment implements DrivingSession.Driv
         binding.toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
         binding.textView19.setText(historyItem.getStationGetID());
         binding.textView17.setText(historyItem.getTimeGet());
-        firestoreDataBase.getDocument(historyItem.getStationGetID(), new MyOnCompliteDataListener<DocumentSnapshot>() {
+        firestoreDataBase.getDocument(historyItem.getStationGetID(), new MyOnCompleteDataListener<DocumentSnapshot>() {
             @Override
             public void onCompleteObservable(@NonNull Observable<DocumentSnapshot> observable) {}
 
@@ -92,7 +91,7 @@ public class HistoryItemFragment extends Fragment implements DrivingSession.Driv
                 mapObjects.addPlacemark(stationGet, ImageProvider.fromBitmap(getBitmap(R.drawable.ic_map_truck_marker)));
                 if(historyItem.getStationPutID() != null){
                     binding.textView27.setText(historyItem.getStationPutID());
-                    firestoreDataBase.getDocument(historyItem.getStationPutID(), new MyOnCompliteDataListener<DocumentSnapshot>() {
+                    firestoreDataBase.getDocument(historyItem.getStationPutID(), new MyOnCompleteDataListener<DocumentSnapshot>() {
                         @Override
                         public void onCompleteObservable(@NonNull Observable<DocumentSnapshot> observable) {}
 

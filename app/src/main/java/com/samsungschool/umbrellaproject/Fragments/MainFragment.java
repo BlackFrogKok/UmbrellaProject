@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -30,13 +28,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.samsungschool.umbrellaproject.Activity.IntroActivity;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
 import com.samsungschool.umbrellaproject.Activity.QrActivity;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
-import com.samsungschool.umbrellaproject.Interface.QrCheckCompliteInterface;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteDataListener;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteListener;
+import com.samsungschool.umbrellaproject.Interface.QrCheckCompleteInterface;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.TextImageProvider;
 import com.samsungschool.umbrellaproject.ViewModels.MainFragmentViewModel;
@@ -57,18 +54,16 @@ import com.yandex.mapkit.mapview.MapView;
 import com.yandex.mapkit.search.SearchFactory;
 import com.yandex.runtime.image.ImageProvider;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 import io.reactivex.rxjava3.core.Observable;
 
 
 public class MainFragment extends Fragment implements ClusterListener, ClusterTapListener,
-        QrCheckCompliteInterface {
+        QrCheckCompleteInterface {
 
     private MainFragmentViewModel viewModel;
     private PlacemarkMapObject Now_Geoposition;
@@ -97,49 +92,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     private String stationID;
     private String name = Calendar.getInstance().getTime().toString();
     private ConstraintLayout getUmbrellaLayout;
-    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
-//        firestoreDataBase.returnUmbrella(umbrella, "100_msk", new MyOnCompliteListener() {
-//            @Override
-//            public void OnComplite() {
-//                ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
-//                Log.d("TAG", "4");
-//                AlertDialog fin = new MaterialAlertDialogBuilder(context)
-//                        .setCustomTitle(c1)
-//                        .setNegativeButton("Отмена", (dialog1, which1) -> {
-//                            firestoreDataBase.closeStation("100_msk");
-//
-//                        })
-//                        .setPositiveButton("Вернул", (dialog1, which1) -> {
-//                            firestoreDataBase.closeStation("100_msk");
-//                            firestoreDataBase.endHistory(result.toString().substring(7), name);
-//                            binding.returnUmbrella.setVisibility(View.INVISIBLE);
-//                        })
-//                        .show();
-//                CountDownTimer timer = new CountDownTimer(60000, 100) {
-//                    public void onTick(long millisUntilFinished) {
-//                        int seconds = (int) (millisUntilFinished / 1000);
-//                        CircularProgressIndicator circularProgressIndicator = c1.findViewById(R.id.circularProgressIndicator);
-//                        TextView t = c1.findViewById(R.id.textViewTimer);
-//                        circularProgressIndicator.setProgress((int) (millisUntilFinished / 60000.0 * 100));
-//                        t.setText(String.valueOf(seconds));
-//                    }
-//
-//                    public void onFinish() {
-//                        firestoreDataBase.closeStation(stationID);
-//                        bottomSheetVisibilityChanged(false);
-//                        fin.dismiss();
-//                    }
-//                }.start();
-//                fin.setOnDismissListener(dialog -> {
-//                    timer.cancel();
-//                    fin.setOnDismissListener(null);
-//                });
-//                fin.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
-//            }
-//        });
-
-    });
 
 
     private MapObjectTapListener mapObjectTapListener = (mapObject, point) -> {
@@ -163,7 +116,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                         t1.setTextColor(getResources().getColor(R.color.red));
                         Toast.makeText(getContext(), "Станция не обслуживается", Toast.LENGTH_SHORT).show();
                     } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                        firestoreDataBase.getUmbrellaCount(stationID, new MyOnCompliteDataListener<Integer>() {
+                        firestoreDataBase.getUmbrellaCount(stationID, new MyOnCompleteDataListener<Integer>() {
                             @Override
                             public void onCompleteObservable(@NonNull Observable<Integer> observable) {
                             }
@@ -344,7 +297,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                                     .setPositiveButton("Вернуть", (dialog, which) -> {
 
                                         Intent intent = new Intent(requireActivity(), QrActivity.class);
-                                        mStartForResult.launch(intent);
+                                        activity.startQRActivityForReturning();
 
 
 
@@ -393,16 +346,16 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
         bottomSheetVisibilityChanged(false);
-        binding.qrScannerBtn.setOnClickListener(v -> activity.startQRActivity());
+        binding.qrScannerBtn.setOnClickListener(v -> activity.startQRActivityForGiving());
         bottomSheetLayout.getViewById(R.id.qr_check).findViewById(R.id.bottomQrScannerBtn)
-                .setOnClickListener(v -> activity.startQRActivity());
+                .setOnClickListener(v -> activity.startQRActivityForGiving());
 
         getUmbrellaLayout = (ConstraintLayout) bottomSheetLayout.getViewById(R.id.get_umbrella);
 
         getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> {
-            firestoreDataBase.getUmbrella(1, stationID, new MyOnCompliteListener() {
+            firestoreDataBase.getUmbrella(1, stationID, new MyOnCompleteListener() {
                 @Override
-                public void OnComplite() {
+                public void OnComplete() {
                     umbrella = 1;
                     showDialog();
                 }
@@ -410,54 +363,54 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         });
 
         getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> {
-            firestoreDataBase.getUmbrella(2, stationID, new MyOnCompliteListener() {
+            firestoreDataBase.getUmbrella(2, stationID, new MyOnCompleteListener() {
                 @Override
-                public void OnComplite() {
+                public void OnComplete() {
                     umbrella = 2;
                     showDialog();
                 }
             });
         });
         getUmbrellaLayout.getViewById(R.id.button3).setOnClickListener(v -> {
-            firestoreDataBase.getUmbrella(3, stationID, new MyOnCompliteListener() {
+            firestoreDataBase.getUmbrella(3, stationID, new MyOnCompleteListener() {
                 @Override
-                public void OnComplite() {
+                public void OnComplete() {
                     umbrella = 3;
                     showDialog();
                 }
             });
         });
         getUmbrellaLayout.getViewById(R.id.button4).setOnClickListener(v -> {
-            firestoreDataBase.getUmbrella(4, stationID, new MyOnCompliteListener() {
+            firestoreDataBase.getUmbrella(4, stationID, new MyOnCompleteListener() {
                 @Override
-                public void OnComplite() {
+                public void OnComplete() {
                     umbrella = 4;
                     showDialog();
                 }
             });
         });
         getUmbrellaLayout.getViewById(R.id.button5).setOnClickListener(v -> {
-            firestoreDataBase.getUmbrella(5, stationID, new MyOnCompliteListener() {
+            firestoreDataBase.getUmbrella(5, stationID, new MyOnCompleteListener() {
                 @Override
-                public void OnComplite() {
+                public void OnComplete() {
                     umbrella = 5;
                     showDialog();
                 }
             });
         });
         getUmbrellaLayout.getViewById(R.id.button6).setOnClickListener(v -> {
-            firestoreDataBase.getUmbrella(6, stationID, new MyOnCompliteListener() {
+            firestoreDataBase.getUmbrella(6, stationID, new MyOnCompleteListener() {
                 @Override
-                public void OnComplite() {
+                public void OnComplete() {
                     umbrella = 6;
                     showDialog();
                 }
             });
         });
         getUmbrellaLayout.getViewById(R.id.button7).setOnClickListener(v -> {
-            firestoreDataBase.getUmbrella(7, stationID, new MyOnCompliteListener() {
+            firestoreDataBase.getUmbrella(7, stationID, new MyOnCompleteListener() {
                 @Override
-                public void OnComplite() {
+                public void OnComplete() {
                     umbrella = 7;
                     showDialog();
                 }
@@ -557,7 +510,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     }
 
     @Override
-    public void QrCheckComplite(@NonNull String stationID) {
+    public void QrCheckComplete(@NonNull String stationID) {
         this.stationID = stationID;
         Log.w("document3", String.valueOf(viewModel.stationMapObject.getValue().get(stationID)) + "l");
         bottomSheetLayout.getViewById(R.id.bottom_sheet)

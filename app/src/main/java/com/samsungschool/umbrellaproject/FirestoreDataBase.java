@@ -9,26 +9,21 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryItem;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteDataListener;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteListener;
 import com.yandex.mapkit.geometry.Point;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.SimpleTimeZone;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -43,7 +38,7 @@ public class FirestoreDataBase {
 
     }
 
-    public void getDocument(String documentID, MyOnCompliteDataListener<DocumentSnapshot> listener) {
+    public void getDocument(String documentID, MyOnCompleteDataListener<DocumentSnapshot> listener) {
         dataBase.collection("stations")
                 .document(documentID)
                 .get()
@@ -55,7 +50,7 @@ public class FirestoreDataBase {
                 .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
     }
 
-    public void getDataStations(MyOnCompliteDataListener<List<DocumentSnapshot>> listener) {
+    public void getDataStations(MyOnCompleteDataListener<List<DocumentSnapshot>> listener) {
         dataBase.collection("stations")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -69,7 +64,7 @@ public class FirestoreDataBase {
                 });
     }
 
-    public void getUmbrellaCount(String stationID, MyOnCompliteDataListener<Integer> listener) {
+    public void getUmbrellaCount(String stationID, MyOnCompleteDataListener<Integer> listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .get()
@@ -130,7 +125,7 @@ public class FirestoreDataBase {
 
     }
 
-    public void getUser(String uID, MyOnCompliteDataListener<User> listener) {
+    public void getUser(String uID, MyOnCompleteDataListener<User> listener) {
         dataBase.collection("users")
                 .document(uID)
                 .get()
@@ -184,7 +179,7 @@ public class FirestoreDataBase {
 
 
 
-    public void getUmbrella(int umbrella, String stationID, MyOnCompliteListener listener) {
+    public void getUmbrella(int umbrella, String stationID, MyOnCompleteListener listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .collection("auth")
@@ -201,7 +196,7 @@ public class FirestoreDataBase {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        listener.OnComplite();
+                                        listener.OnComplete();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -220,7 +215,7 @@ public class FirestoreDataBase {
                 });
     }
 
-    public void returnUmbrella(int umbrella, String stationID, MyOnCompliteListener listener) {
+    public void returnUmbrella(int umbrella, String stationID, MyOnCompleteListener listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .collection("auth")
@@ -237,7 +232,7 @@ public class FirestoreDataBase {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        listener.OnComplite();
+                                        listener.OnComplete();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {

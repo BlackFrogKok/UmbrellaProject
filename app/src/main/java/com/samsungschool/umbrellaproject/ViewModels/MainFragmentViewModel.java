@@ -5,22 +5,19 @@ import static com.gun0912.tedpermission.provider.TedPermissionProvider.context;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.annimon.stream.Collector;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.samsungschool.umbrellaproject.Compass;
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteDataListener;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.location.FilteringMode;
@@ -141,7 +138,7 @@ public class MainFragmentViewModel extends AndroidViewModel {
     }
 
     public void loadStationsPoint(){
-        firestoreDataBase.getDataStations(new MyOnCompliteDataListener<List<DocumentSnapshot>>() {
+        firestoreDataBase.getDataStations(new MyOnCompleteDataListener<List<DocumentSnapshot>>() {
             @Override
             public void onCompleteObservable(@NonNull Observable<List<DocumentSnapshot>> observable) {
                 Disposable disposable = observable

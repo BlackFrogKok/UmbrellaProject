@@ -1,6 +1,5 @@
 package com.samsungschool.umbrellaproject;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteDataListener;
 
 import java.util.Objects;
 
@@ -20,7 +19,7 @@ public class Station {
     private final FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
 
 
-    public void checkQrData(String result, MyOnCompliteDataListener<String> listener) {
+    public void checkQrData(String result, MyOnCompleteDataListener<String> listener) {
         try {
 
             String[] subStr;
@@ -69,7 +68,7 @@ public class Station {
         }
     }
 
-    public void checkCode(String result, MyOnCompliteDataListener<String> listener){
+    public void checkCode(String result, MyOnCompleteDataListener<String> listener){
         String[] subStr;
         subStr = result.split("-");
         if (subStr.length == 2){

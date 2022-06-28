@@ -1,7 +1,6 @@
 package com.samsungschool.umbrellaproject.Activity.Auth;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -20,18 +18,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.samsungschool.umbrellaproject.Activity.MainActivity;
-import com.samsungschool.umbrellaproject.FirestoreDataBase;
 import com.samsungschool.umbrellaproject.Fragments.Auth.EnterCodeFragment;
 import com.samsungschool.umbrellaproject.Fragments.RegistrateNewUser;
 import com.samsungschool.umbrellaproject.Interface.AutoSetCodeInterfaces;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteListener;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteListener;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.User;
 import com.samsungschool.umbrellaproject.databinding.ActivitySignInBinding;
@@ -205,13 +198,13 @@ public class SignInActivity extends AppCompatActivity implements EnterPhoneFragm
                 });
     }
 
-    private void createUserDocument(MyOnCompliteListener listener) {
+    private void createUserDocument(MyOnCompleteListener listener) {
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(firebaseAuth.getUid())
                 .set(user)
                 .addOnCompleteListener(task -> {
-                    listener.OnComplite();
+                    listener.OnComplete();
                 })
                 .addOnFailureListener(e -> {
 

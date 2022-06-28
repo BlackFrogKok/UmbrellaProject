@@ -8,22 +8,14 @@ import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.samsungschool.umbrellaproject.FirestoreDataBase;
@@ -34,18 +26,13 @@ import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragme
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.HistoryFragment.HistoryItemFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.NFCFragment.NfcFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.ProfileFragment.ProfileFragment;
-import com.samsungschool.umbrellaproject.Fragments.NavigationItems.QRReadFragment.QrFragment;
 import com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragment.SettingsFragment;
-import com.samsungschool.umbrellaproject.Interface.MakeTransition;
-import com.samsungschool.umbrellaproject.Interface.MyOnCompliteDataListener;
-import com.samsungschool.umbrellaproject.Interface.QrCheckCompliteInterface;
+import com.samsungschool.umbrellaproject.Interface.MyOnCompleteDataListener;
+import com.samsungschool.umbrellaproject.Interface.QrCheckCompleteInterface;
 import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.Station;
 import com.samsungschool.umbrellaproject.User;
 import com.samsungschool.umbrellaproject.databinding.ActivityMainBinding;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -62,14 +49,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
         if(result.getResultCode() == Activity.RESULT_OK){
             code = result.getData().getStringExtra("code");
             if(code.startsWith("C")){
-                station.checkCode(code, new MyOnCompliteDataListener<String>() {
+                station.checkCode(code, new MyOnCompleteDataListener<String>() {
                     @Override
                     public void onCompleteObservable(@NonNull Observable<String> observable) {}
 
                     @Override
                     public void onComplete(@NonNull String s) {
                         Log.w("document2", s);
-                        ((QrCheckCompliteInterface) getSupportFragmentManager().findFragmentByTag("main")).QrCheckComplite(s);
+                        ((QrCheckCompleteInterface) getSupportFragmentManager().findFragmentByTag("main")).QrCheckComplete(s);
                     }
 
                     @Override
@@ -78,14 +65,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     }
                 });
             }else if(code.length() > 6){
-                station.checkQrData(code, new MyOnCompliteDataListener<String>() {
+                station.checkQrData(code, new MyOnCompleteDataListener<String>() {
                     @Override
                     public void onCompleteObservable(@NonNull Observable<String> observable) {}
 
                     @Override
                     public void onComplete(@NonNull String s) {
                         Log.w("document2", s);
-                        ((QrCheckCompliteInterface) getSupportFragmentManager().findFragmentByTag("main")).QrCheckComplite(s);
+                        ((QrCheckCompleteInterface) getSupportFragmentManager().findFragmentByTag("main")).QrCheckComplete(s);
                     }
 
                     @Override
@@ -138,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     binding.getRoot().close();
                 });
 
-        dataBase.getUser(FirebaseAuth.getInstance().getUid(), new MyOnCompliteDataListener<User>() {
+        dataBase.getUser(FirebaseAuth.getInstance().getUid(), new MyOnCompleteDataListener<User>() {
             @Override
             public void onCompleteObservable(@NonNull Observable<User> observable) {}
 
@@ -197,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
                     startFragment(AboutFragment.newInstance(), "a");
                     return true;
                 case R.id.nav_qr:
-                    startQRActivity();
+                    startQRActivityForGiving();
                     return true;
                 case R.id.nav_nfc:
                     startFragment(NfcFragment.newInstance(), "n");
@@ -209,11 +196,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.onNa
     }
 
 
-    public void startQRActivity(){
+    public void startQRActivityForGiving(){
         Intent intent = new Intent(this, QrActivity.class);
         mStartForResult.launch(intent);
     }
 
+    public void startQRActivityForReturning(){
+        Intent intent = new Intent(this, QrActivity.class);
+        mStartForResult.launch(intent);
+    }
     public void startHistoryItemFragment(HistoryItem historyItem){
         replaceFragment(HistoryItemFragment.newInstance(historyItem), "null");
     }
