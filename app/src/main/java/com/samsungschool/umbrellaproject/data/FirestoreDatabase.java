@@ -5,7 +5,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -77,6 +76,43 @@ public class FirestoreDatabase {
 
     }
 
+    public void getFreeUmbrella(String stationID, OnCompleteDataListener<Integer> listener) {
+        dataBase.collection("stations")
+                .document(stationID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        listener.onComplete(getFree((ArrayList<Integer>) (task.getResult().get("freeUmbrella"))));
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                });
+
+    }
+
+    public void getStationActive(String stationID, OnCompleteDataListener<Integer> listener) {
+        dataBase.collection("stations")
+                .document(stationID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Long longVal =  (Long) (task.getResult().get("active"));
+                        if (longVal == null){
+                            listener.onComplete(0);
+                        }
+                        else {
+                            listener.onComplete(longVal.intValue());
+                        }
+
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                });
+
+    }
+
     public void closeStation(String stationID, boolean isTake) {
         Map<String, Object> map = new HashMap();
         map.put("issued", true);
@@ -91,7 +127,7 @@ public class FirestoreDatabase {
                 .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
     }
 
-    private void getStationAdress(String stationID, OnCompleteListener listener) {
+    private void getStationAddress(String stationID, OnCompleteListener listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .get()
@@ -99,6 +135,18 @@ public class FirestoreDatabase {
                 .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
 
     }
+
+    private void getStatus(String stationID, OnCompleteListener listener) {
+        dataBase.collection("stations")
+                .document(stationID)
+                .collection("auth")
+                .document("status")
+                .get()
+                .addOnCompleteListener(listener)
+                .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
+
+    }
+
 
     public void getUser(String uID, OnCompleteDataListener<User> listener) {
         dataBase.collection("users")
@@ -113,8 +161,8 @@ public class FirestoreDatabase {
 
     }
 
-    public void addHistory(String stationID, String name) {
-        getStationAdress(stationID, task -> {
+    public void addHistory(String stationID, String session) {
+        getStationAddress(stationID, task -> {
             if (task.isSuccessful()) {
                 HistoryItem h = new HistoryItem();
                 h.setAddress(((DocumentSnapshot) task.getResult()).get("adress", String.class));
@@ -126,9 +174,12 @@ public class FirestoreDatabase {
                 dataBase.collection("users")
                         .document(FirebaseAuth.getInstance().getUid())
                         .collection("history")
-                        .document(name)
+                        .document(session)
                         .set(h)
                         .addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()){
+                                setActiveSession(session);
+                            }
                         })
                         .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
             }
@@ -144,7 +195,21 @@ public class FirestoreDatabase {
                 .document(name);
         b.update("timePut", getCurrentTime());
         b.update("time", "Сдан");
-        b.update("stationPutID", stationID);
+        b.update("stationPutID", stationID)
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        setActiveSession("");
+                    }
+                });
+
+
+    }
+
+    public void setActiveSession(String name) {
+        DocumentReference b = dataBase.collection("users")
+                .document(FirebaseAuth.getInstance().getUid());
+
+        b.update("activeSession", name);
 
 
     }
@@ -192,5 +257,14 @@ public class FirestoreDatabase {
         Calendar calendar = Calendar.getInstance();
         Log.d("TAG", calendar.getTime().toString());
         return String.valueOf(calendar.getTime().getHours()) + ":" + String.valueOf(calendar.getTime().getMinutes());
+    }
+
+    private Integer getFree(ArrayList<Integer> arrayList) {
+        for (int i = 1; i < 8; i++) {
+            if (!arrayList.contains(Long.valueOf(i))){
+                return i;
+            }
+        }
+        return -1;
     }
 }

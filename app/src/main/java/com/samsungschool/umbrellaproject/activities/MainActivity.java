@@ -29,6 +29,7 @@ import com.samsungschool.umbrellaproject.fragments.AboutFragment;
 import com.samsungschool.umbrellaproject.fragments.HistoryFragment;
 import com.samsungschool.umbrellaproject.fragments.MainFragment;
 import com.samsungschool.umbrellaproject.interfaces.NavigationListener;
+import com.samsungschool.umbrellaproject.interfaces.UserListener;
 import com.samsungschool.umbrellaproject.items.HistoryItem;
 import com.samsungschool.umbrellaproject.fragments.RouteFragment;
 import com.samsungschool.umbrellaproject.fragments.NfcFragment;
@@ -129,12 +130,16 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                 TextView nav_mail = binding.navigationDrawer.getHeaderView(0).findViewById(R.id.userEmail);
                 nav_user.setText(user.getName());
                 nav_mail.setText(user.getMail());
+
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_MAIN_FRAGMENT);
+                if (fragment != null) ((UserListener) fragment).onLoaded(user);
             }
 
             @Override
             public void onCanceled() {
                 // Do nothing
             }
+
         });
     }
 

@@ -48,6 +48,8 @@ import com.samsungschool.umbrellaproject.interfaces.OnCompleteDataListener;
 import com.samsungschool.umbrellaproject.interfaces.OnTaskCompleteListener;
 import com.samsungschool.umbrellaproject.interfaces.QrCheckCompleteListener;
 import com.samsungschool.umbrellaproject.R;
+import com.samsungschool.umbrellaproject.interfaces.UserListener;
+import com.samsungschool.umbrellaproject.models.User;
 import com.samsungschool.umbrellaproject.widgets.TextImageProvider;
 import com.samsungschool.umbrellaproject.viewmodels.MainViewModel;
 import com.yandex.mapkit.Animation;
@@ -74,7 +76,7 @@ import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Observable;
 
-public class MainFragment extends Fragment implements ClusterListener, ClusterTapListener, QrCheckCompleteListener {
+public class MainFragment extends Fragment implements ClusterListener, ClusterTapListener, QrCheckCompleteListener, UserListener {
 
     private MainViewModel viewModel;
     private PlacemarkMapObject Now_Geoposition;
@@ -98,12 +100,12 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
     public static final String TAG_MAIN_FRAGMENT = "main";
     private final Station station = new Station();
-    private Integer umbrella;
+    private User user;
 
     private boolean timerFlag = true;
 
     private String stationID;
-    private final String name = Calendar.getInstance().getTime().toString();
+
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
 
@@ -115,58 +117,69 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
                     @Override
                     public void onComplete(@NonNull String s) {
-                        firestoreDataBase.returnUmbrella(umbrella, s, new OnTaskCompleteListener() {
+                        firestoreDataBase.getFreeUmbrella(s, new OnCompleteDataListener<Integer>() {
                             @Override
-                            public void OnComplete() {
-                                timerFlag = true;
-                                ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
-                                Log.d("TAG", "4");
-                                AlertDialog fin = new MaterialAlertDialogBuilder(context)
-                                        .setCustomTitle(c1)
-                                        .setNegativeButton("Отмена", (dialog1, which1) -> {
+                            public void onComplete(@NonNull Integer integer) {
+                                firestoreDataBase.returnUmbrella(integer, s, new OnTaskCompleteListener() {
+                                    @Override
+                                    public void OnComplete() {
+                                        timerFlag = true;
+                                        ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
+                                        Log.d("TAG", "4");
+                                        AlertDialog fin = new MaterialAlertDialogBuilder(context)
+                                                .setCustomTitle(c1)
+                                                .setNegativeButton("Отмена", (dialog1, which1) -> {
+                                                    timerFlag = false;
+                                                    firestoreDataBase.closeStation(s, false);
+
+                                                })
+                                                .setPositiveButton("Вернул", (dialog1, which1) -> {
+                                                    timerFlag = false;
+                                                    firestoreDataBase.closeStation(s, true);
+                                                    firestoreDataBase.endHistory(s, user.getActiveSession());
+
+                                                    binding.returnUmbrella.setVisibility(View.INVISIBLE);
+                                                })
+                                                .show();
+                                        CountDownTimer timer = new CountDownTimer(60000, 100) {
+                                            public void onTick(long millisUntilFinished) {
+                                                if (!timerFlag) {
+                                                    cancel();
+
+                                                }
+                                                int seconds = (int) (millisUntilFinished / 1000);
+                                                CircularProgressIndicator circularProgressIndicator = c1.findViewById(R.id.circularProgressIndicator);
+                                                TextView t = c1.findViewById(R.id.textViewTimer);
+                                                circularProgressIndicator.setProgress((int) (millisUntilFinished / 60000.0 * 100));
+                                                t.setText(String.valueOf(seconds));
+                                            }
+
+                                            public void onFinish() {
+                                                if (!timerFlag) {
+                                                    cancel();
+                                                    return;
+                                                }
+                                                firestoreDataBase.closeStation(s, false);
+                                                bottomSheetVisibilityChanged(false);
+                                                fin.dismiss();
+                                            }
+                                        }.start();
+                                        fin.setOnDismissListener(dialog -> {
                                             timerFlag = false;
-                                            firestoreDataBase.closeStation(s, false);
-
-                                        })
-                                        .setPositiveButton("Вернул", (dialog1, which1) -> {
-                                            timerFlag = false;
-                                            firestoreDataBase.closeStation(s, true);
-                                            firestoreDataBase.endHistory(s, name);
-
-                                            binding.returnUmbrella.setVisibility(View.INVISIBLE);
-                                        })
-                                        .show();
-                                CountDownTimer timer = new CountDownTimer(60000, 100) {
-                                    public void onTick(long millisUntilFinished) {
-                                        if (!timerFlag) {
-                                            cancel();
-
-                                        }
-                                        int seconds = (int) (millisUntilFinished / 1000);
-                                        CircularProgressIndicator circularProgressIndicator = c1.findViewById(R.id.circularProgressIndicator);
-                                        TextView t = c1.findViewById(R.id.textViewTimer);
-                                        circularProgressIndicator.setProgress((int) (millisUntilFinished / 60000.0 * 100));
-                                        t.setText(String.valueOf(seconds));
+                                            timer.onFinish();
+                                            fin.setOnDismissListener(null);
+                                        });
+                                        fin.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
                                     }
-
-                                    public void onFinish() {
-                                        if (!timerFlag) {
-                                            cancel();
-                                            return;
-                                        }
-                                        firestoreDataBase.closeStation(s, false);
-                                        bottomSheetVisibilityChanged(false);
-                                        fin.dismiss();
-                                    }
-                                }.start();
-                                fin.setOnDismissListener(dialog -> {
-                                    timerFlag = false;
-                                    timer.onFinish();
-                                    fin.setOnDismissListener(null);
                                 });
-                                fin.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
+                            }
+
+                            @Override
+                            public void onCanceled() {
+
                             }
                         });
+
 
                     }
 
@@ -191,38 +204,52 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     private final BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
             if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                 closeBottomSheet();
-            } else if (!stationID.equals("100_msk") & newState == BottomSheetBehavior.STATE_EXPANDED) {
-                TextView t1 = bottomSheet.findViewById(R.id.textView10);
-                TextView t2 = bottomSheet.findViewById(R.id.countUmbrella);
-                t2.setText("");
-                t1.setText(R.string.station_inactive);
-                t1.setTextColor(getResources().getColor(R.color.red));
-
             } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                firestoreDataBase.getUmbrellaCount(stationID, new OnCompleteDataListener<Integer>() {
+                firestoreDataBase.getStationActive(stationID, new OnCompleteDataListener<Integer>() {
                     @Override
-                    public void onCompleteObservable(@NonNull Observable<Integer> observable) {
-                        // Do nothing
-                    }
-
-                    @Override
-                    public void onComplete(@NonNull Integer count) {
-                        if (count == 0) {
-                            ((TextView) bottomSheet.findViewById(R.id.countUmbrella)).setText(R.string.umbrella_empty);
+                    public void onComplete(@NonNull Integer integer) {
+                        if (integer == 0) {
+                            TextView t1 = bottomSheet.findViewById(R.id.textView10);
+                            TextView t2 = bottomSheet.findViewById(R.id.countUmbrella);
+                            t2.setText("");
+                            t1.setText(R.string.station_inactive);
+                            t1.setTextColor(getResources().getColor(R.color.red));
                         } else {
-                            ((TextView) bottomSheet.findViewById(R.id.countUmbrella)).setText(format(getString(R.string.umbrella_count), count));
+                            firestoreDataBase.getUmbrellaCount(stationID, new OnCompleteDataListener<Integer>() {
+                                @Override
+                                public void onCompleteObservable(@NonNull Observable<Integer> observable) {
+                                    // Do nothing
+                                }
+
+                                @Override
+                                public void onComplete(@NonNull Integer count) {
+                                    if (count == 0) {
+                                        ((TextView) bottomSheet.findViewById(R.id.countUmbrella)).setText(R.string.umbrella_empty);
+                                    } else {
+                                        ((TextView) bottomSheet.findViewById(R.id.countUmbrella)).setText(format(getString(R.string.umbrella_count), count));
+                                    }
+                                    ((TextView) bottomSheet.findViewById(R.id.textView10)).setText(R.string.station_active);
+                                    ((TextView) bottomSheet.findViewById(R.id.textView10)).setTextColor(getResources().getColor(R.color.green));
+                                }
+
+                                @Override
+                                public void onCanceled() {
+                                    // Do nothing
+                                }
+                            });
                         }
-                        ((TextView) bottomSheet.findViewById(R.id.textView10)).setText(R.string.station_active);
-                        ((TextView) bottomSheet.findViewById(R.id.textView10)).setTextColor(getResources().getColor(R.color.green));
                     }
 
                     @Override
                     public void onCanceled() {
-                        // Do nothing
+
                     }
                 });
+
+
             }
         }
 
@@ -324,17 +351,9 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                 .setPositiveButton("Забрал", (dialog, which) -> {
                     binding.returnUmbrella.setVisibility(View.VISIBLE);
                     timerFlag = false;
-                    firestoreDataBase.addHistory(stationID, name);
+                    firestoreDataBase.addHistory(stationID, Calendar.getInstance().getTime().toString());
                     firestoreDataBase.closeStation(stationID, true);
-                    binding.returnUmbrella.setOnClickListener(v -> {
-                        ConstraintLayout umbrellaDialog = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_dialog, binding.getRoot(), false);
-                        AlertDialog returnUmbrella = new MaterialAlertDialogBuilder(context)
-                                .setCustomTitle(umbrellaDialog)
-                                .setNegativeButton("Отмена", (dialog1, which1) -> {})
-                                .setPositiveButton("Вернуть", (dialog1, which1) -> mStartForResult.launch(QrActivity.newIntent(requireActivity())))
-                                .show();
-                        returnUmbrella.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.alert_dialog_rounded));
-                    });
+
                     bottomSheetVisibilityChanged(false);
                 })
                 .show();
@@ -385,38 +404,49 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         bottomSheetLayout.getViewById(R.id.qr_check).findViewById(R.id.bottomQrScannerBtn).setOnClickListener(v -> activity.startQRActivity());
         ConstraintLayout getUmbrellaLayout = (ConstraintLayout) bottomSheetLayout.getViewById(R.id.get_umbrella);
 
+        binding.returnUmbrella.setOnClickListener(v -> {
+            ConstraintLayout umbrellaDialog = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_dialog, binding.getRoot(), false);
+            AlertDialog returnUmbrella = new MaterialAlertDialogBuilder(context)
+                    .setCustomTitle(umbrellaDialog)
+                    .setNegativeButton("Отмена", (dialog1, which1) -> {
+                    })
+                    .setPositiveButton("Вернуть", (dialog1, which1) -> mStartForResult.launch(QrActivity.newIntent(requireActivity())))
+                    .show();
+            returnUmbrella.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.alert_dialog_rounded));
+        });
+
         getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> firestoreDataBase.getUmbrella(1, stationID, () -> {
-            umbrella = 1;
+
             showDialog();
         }));
 
         getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> firestoreDataBase.getUmbrella(2, stationID, () -> {
-            umbrella = 2;
+
             showDialog();
         }));
 
         getUmbrellaLayout.getViewById(R.id.button3).setOnClickListener(v -> firestoreDataBase.getUmbrella(3, stationID, () -> {
-            umbrella = 3;
+
             showDialog();
         }));
 
         getUmbrellaLayout.getViewById(R.id.button4).setOnClickListener(v -> firestoreDataBase.getUmbrella(4, stationID, () -> {
-            umbrella = 4;
+
             showDialog();
         }));
 
         getUmbrellaLayout.getViewById(R.id.button5).setOnClickListener(v -> firestoreDataBase.getUmbrella(5, stationID, () -> {
-            umbrella = 5;
+
             showDialog();
         }));
 
         getUmbrellaLayout.getViewById(R.id.button6).setOnClickListener(v -> firestoreDataBase.getUmbrella(6, stationID, () -> {
-            umbrella = 6;
+
             showDialog();
         }));
 
         getUmbrellaLayout.getViewById(R.id.button7).setOnClickListener(v -> firestoreDataBase.getUmbrella(7, stationID, () -> {
-            umbrella = 7;
+
             showDialog();
         }));
     }
@@ -515,5 +545,17 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
     public static <K, V> BiMap<K, V> zipToMap(List<K> keys, List<V> values) {
         return HashBiMap.create(Objects.requireNonNull(IntStream.range(0, keys.size()).boxed().collect(Collectors.toMap(keys::get, values::get))));
+    }
+
+    @Override
+    public void onLoaded(User user) {
+        this.user = user;
+        if (user.getActiveSession() != null && !user.getActiveSession().equals("")){
+            binding.returnUmbrella.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            binding.returnUmbrella.setVisibility(View.GONE);
+        }
     }
 }

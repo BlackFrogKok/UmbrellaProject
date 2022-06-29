@@ -96,6 +96,7 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
     public void onInfoSubmitted(String name, String email) {
         user.setName(name);
         user.setMail(email);
+        user.setActiveSession("");
         createUser();
     }
 

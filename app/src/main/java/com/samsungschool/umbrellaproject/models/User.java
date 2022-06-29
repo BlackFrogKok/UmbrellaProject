@@ -7,6 +7,7 @@ public class User implements Parcelable {
     private String phoneNumber;
     private String name;
     private String mail;
+    private String activeSession;
 
     public User() {
         // Default constructor
@@ -64,5 +65,14 @@ public class User implements Parcelable {
         dest.writeString(phoneNumber);
         dest.writeString(name);
         dest.writeString(mail);
+    }
+
+
+    public String getActiveSession() {
+        return activeSession;
+    }
+
+    public void setActiveSession(String activeSession) {
+        this.activeSession = activeSession;
     }
 }
