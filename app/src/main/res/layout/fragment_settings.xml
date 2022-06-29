@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/fragmentPref"
-        android:name="com.samsungschool.umbrellaproject.Fragments.NavigationItems.SettingsFragment.PreferenceFragment"
+        android:name="com.samsungschool.umbrellaproject.fragments.PreferenceFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

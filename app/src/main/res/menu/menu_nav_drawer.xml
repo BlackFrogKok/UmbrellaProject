@@ -3,11 +3,6 @@
     <group android:checkableBehavior="none">
 
         <item
-            android:id="@+id/nav_nfc"
-            android:icon="@drawable/ic_nfc"
-            android:title="@string/nfc_item" />
-
-        <item
             android:id="@+id/nav_qr"
             android:icon="@drawable/ic_qr"
             android:title="@string/qr_item" />
@@ -15,7 +10,6 @@
             android:id="@+id/nav_user"
             android:icon="@drawable/ic_user"
             android:title="@string/user_item" />
-
 
         <item
             android:id="@+id/nav_history"
@@ -28,8 +22,6 @@
             android:icon="@drawable/ic_settings"
             android:title="@string/settings_item" />
 
-
-
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help"
@@ -39,6 +31,5 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_info"
             android:title="@string/about_item" />
-
     </group>
 </menu>

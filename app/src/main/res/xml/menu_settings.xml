@@ -14,10 +14,10 @@
         <DropDownPreference
             android:key="language"
             android:title="Язык приложения"
-            android:entries="@array/language"
+            android:entries="@array/language_names"
             android:defaultValue="3"
             app:useSimpleSummaryProvider="true"
-            android:entryValues="@array/language_values"/>
+            android:entryValues="@array/language_codes"/>
 
 
     </PreferenceCategory>
@@ -30,27 +30,14 @@
         <DropDownPreference
             android:key="ui_theme"
             android:title="Тема приложения"
-            android:entries="@array/ui_theme"
+            android:entries="@array/theme_names"
             android:defaultValue="3"
             android:icon="@drawable/ic_baseline_keyboard_arrow_right_24"
             android:dialogIcon="@drawable/ic_baseline_keyboard_arrow_right_24"
             app:useSimpleSummaryProvider="true"
-            android:entryValues="@array/ui_theme_values"/>
+            android:entryValues="@array/theme_codes"/>
 
     </PreferenceCategory>
 
-
-    <PreferenceCategory
-        app:title="Донат"
-        app:singleLineTitle="true">
-        <Preference
-            app:key="subs"
-            app:title="Подключить подписку"
-            app:summary=""/>
-        <Preference
-            app:key="like"
-            app:title="Поддержать разработчиков"
-            app:summary="Поставить Диме и Антону лайк"/>
-    </PreferenceCategory>
 
 </PreferenceScreen>

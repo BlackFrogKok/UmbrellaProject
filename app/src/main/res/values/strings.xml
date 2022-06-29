@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Umbrella</string>
 
-
     <!-- Auth -->
     <string name="verificationPhoneText">Вход по номеру \n телефона</string>
     <string name="phoneFormat">+</string>
@@ -10,9 +9,7 @@
     <string name="settingsInfo">Настройки</string>
     <string name="aboutInfo">О приложении</string>
 
-
     <!-- Title of navigation view -->
-
     <string name="qr_item">QR код</string>
     <string name="nfc_item">NFC read</string>
     <string name="history_item">История</string>
@@ -28,9 +25,9 @@
     <string name="address">Address</string>
     <string name="time">Time</string>
     <string name="clear">Clear history</string>
+    <string name="history_empty">Пока здесь ничего нет</string>
 
-
-    <!-- for developing -->
+    <!-- For developing -->
     <string name="temp">something info</string>
     <string name="test">bla-bla-bla smth must be here</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -47,7 +44,7 @@
     <string name="qr_hint">Наведите камеру на QR-код</string>
     <string name="enter_code">Ввести код вручную</string>
     <string name="code">Код на киоске выдачи</string>
-    <string name="accept">Ok</string>
+    <string name="accept">OK</string>
     <string name="decline">Отмена</string>
     <string name="phone_mask">(XXX) XXX-XX-XX</string>
     <string name="newUserRegistrationText">Регистрация нового пользователя</string>
@@ -55,6 +52,46 @@
     <string name="mail">Почта</string>
     <string name="ok">OK</string>
 
+    <!-- Help -->
+    <string name="help_slide_1_title">Возьмите зонт</string>
+    <string name="help_slide_1_description">С помощью камеры отсканируйте QR-код на экране станции и начните аренду</string>
+    <string name="help_slide_2_title">Дойдите до назначения</string>
+    <string name="help_slide_2_description">Используйте зонт во время внезапного дождя</string>
+    <string name="help_slide_3_title">Верните зонт</string>
+    <string name="help_slide_3_description">Доберитесь до цели и оставьте зонтик в ближайшей станции</string>
+    <string name="help_slide_4_title">Вы готовы!</string>
+    <string name="help_slide_4_description" />
 
+    <!-- About -->
+    <string name="version">Версия: %d</string>
 
+    <!-- Preferences-->
+    <string name="theme_set">Тема установлена, перезапустите приложение</string>
+    <string name="language_set">Язык установлен, перезапустите приложение</string>
+
+    <!-- Route-->
+    <string name="rent">Арента</string>
+    <string name="returned">Сдан</string>
+
+    <!-- Main -->
+    <string name="umbrella_empty">Нет свободных зонтов</string>
+    <string name="umbrella_count">Свободных зонтов: %d</string>
+    <string name="station_active">Станция активна</string>
+    <string name="station_inactive">Станция не работает</string>
+
+    <!-- Hints -->
+    <string name="hint_permission">Для использования приложения необходимо предоставить доступ к местоположению и камере.\n\nВключите разрешения в [Настройки] > [Разрешения]</string>
+    <string name="hint_phone">Введите номер телефона</string>
+    <string name="hint_code">Введите код</string>
+    <string name="hint_sms">Введите 6-значный код из SMS\nотправленной на номер\n%s</string>
+
+    <!-- Errors -->
+    <string name="error_auth">Ошибка авторизации</string>
+    <string name="error_qr">Неправильный QR code\nПожалуйста, повторите попытку</string>
+    <string name="error_not_support">Функция пока недоступна</string>
+    <string name="error_wrong_format">Неверный формат</string>
+    <string name="error_wrong_country">Неверный код страны</string>
+    <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="error_server">Ошибка сервера</string>
+    <string name="error_network">Ошибка сети</string>
 </resources>
