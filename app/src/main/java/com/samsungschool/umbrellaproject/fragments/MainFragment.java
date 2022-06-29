@@ -118,22 +118,30 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                         firestoreDataBase.returnUmbrella(umbrella, s, new OnTaskCompleteListener() {
                             @Override
                             public void OnComplete() {
+                                timerFlag = true;
                                 ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
                                 Log.d("TAG", "4");
                                 AlertDialog fin = new MaterialAlertDialogBuilder(context)
                                         .setCustomTitle(c1)
                                         .setNegativeButton("Отмена", (dialog1, which1) -> {
+                                            timerFlag = false;
                                             firestoreDataBase.closeStation(s, false);
 
                                         })
                                         .setPositiveButton("Вернул", (dialog1, which1) -> {
+                                            timerFlag = false;
                                             firestoreDataBase.closeStation(s, true);
                                             firestoreDataBase.endHistory(s, name);
+
                                             binding.returnUmbrella.setVisibility(View.INVISIBLE);
                                         })
                                         .show();
                                 CountDownTimer timer = new CountDownTimer(60000, 100) {
                                     public void onTick(long millisUntilFinished) {
+                                        if (!timerFlag) {
+                                            cancel();
+
+                                        }
                                         int seconds = (int) (millisUntilFinished / 1000);
                                         CircularProgressIndicator circularProgressIndicator = c1.findViewById(R.id.circularProgressIndicator);
                                         TextView t = c1.findViewById(R.id.textViewTimer);
@@ -142,13 +150,17 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                                     }
 
                                     public void onFinish() {
-
+                                        if (!timerFlag) {
+                                            cancel();
+                                            return;
+                                        }
                                         firestoreDataBase.closeStation(s, false);
                                         bottomSheetVisibilityChanged(false);
                                         fin.dismiss();
                                     }
                                 }.start();
                                 fin.setOnDismissListener(dialog -> {
+                                    timerFlag = false;
                                     timer.onFinish();
                                     fin.setOnDismissListener(null);
                                 });
@@ -299,6 +311,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     }
 
     private void showDialog() {
+        timerFlag = true;
         ConstraintLayout c = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.get_umbrella_dialog, binding.getRoot(), false);
 
         AlertDialog d = new MaterialAlertDialogBuilder(context)
@@ -306,21 +319,19 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                 .setNegativeButton("Отмена", (dialog, which) -> {
                     firestoreDataBase.closeStation(stationID, false);
                     bottomSheetVisibilityChanged(false);
+                    timerFlag = false;
                 })
                 .setPositiveButton("Забрал", (dialog, which) -> {
                     binding.returnUmbrella.setVisibility(View.VISIBLE);
+                    timerFlag = false;
                     firestoreDataBase.addHistory(stationID, name);
                     firestoreDataBase.closeStation(stationID, true);
                     binding.returnUmbrella.setOnClickListener(v -> {
                         ConstraintLayout umbrellaDialog = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_dialog, binding.getRoot(), false);
                         AlertDialog returnUmbrella = new MaterialAlertDialogBuilder(context)
                                 .setCustomTitle(umbrellaDialog)
-                                .setNegativeButton("Отмена", (dialog1, which1) -> {
-                                })
+                                .setNegativeButton("Отмена", (dialog1, which1) -> {})
                                 .setPositiveButton("Вернуть", (dialog1, which1) -> mStartForResult.launch(QrActivity.newIntent(requireActivity())))
-                                .setOnDismissListener(dialog12 -> {
-
-                                })
                                 .show();
                         returnUmbrella.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.alert_dialog_rounded));
                     });
@@ -344,6 +355,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             public void onFinish() {
                 if (!timerFlag) {
                     cancel();
+                    return;
                 }
                 firestoreDataBase.closeStation(stationID, false);
                 bottomSheetVisibilityChanged(false);
@@ -353,6 +365,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
 
         d.setOnDismissListener(dialog -> {
+            timerFlag = false;
             timer.onFinish();
             d.setOnDismissListener(null);
         });
