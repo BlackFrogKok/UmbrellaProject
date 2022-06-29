@@ -70,7 +70,7 @@
     <string name="language_set">Язык установлен, перезапустите приложение</string>
 
     <!-- Route-->
-    <string name="rent">Арента</string>
+    <string name="rent">Аренда</string>
     <string name="returned">Сдан</string>
 
     <!-- Main -->

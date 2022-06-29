@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -76,39 +77,15 @@ public class FirestoreDatabase {
 
     }
 
-    //доделать
-    public int getFree(String stationID) {
-
-        final int ans;
-        dataBase.collection("stations")
-                .document(stationID)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Integer> list = (ArrayList<Integer>) (task.getResult().get("freeUmbrella"));
-                        for (int i = 1; i < 8; i++) {
-
-
-                            if (list.contains(i)) {
-                            } else {
-
-                            }
-                        }
-                    }
-                }).addOnFailureListener(e -> {
-                });
-        return -1;
-
-
-    }
-
-
-    public void closeStation(String stationID) {
+    public void closeStation(String stationID, boolean isTake) {
+        Map<String, Object> map = new HashMap();
+        map.put("issued", true);
+        map.put("trueTake", isTake);
         dataBase.collection("stations")
                 .document(stationID)
                 .collection("auth")
                 .document("isIssued")
-                .update("issued", true)
+                .update(map)
                 .addOnCompleteListener(task -> {
                 })
                 .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));

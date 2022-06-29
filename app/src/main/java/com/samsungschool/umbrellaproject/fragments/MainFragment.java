@@ -100,6 +100,8 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     private final Station station = new Station();
     private Integer umbrella;
 
+    private boolean timerFlag = true;
+
     private String stationID;
     private final String name = Calendar.getInstance().getTime().toString();
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -110,11 +112,10 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             if (data != null) {
                 station.checkQrData(data.getStringExtra("code"), new OnCompleteDataListener<String>() {
 
-                    String stationIdPut = data.getStringExtra("code").split("-")[1];
 
                     @Override
                     public void onComplete(@NonNull String s) {
-                        firestoreDataBase.returnUmbrella(umbrella, stationIdPut, new OnTaskCompleteListener() {
+                        firestoreDataBase.returnUmbrella(umbrella, s, new OnTaskCompleteListener() {
                             @Override
                             public void OnComplete() {
                                 ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
@@ -122,12 +123,12 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                                 AlertDialog fin = new MaterialAlertDialogBuilder(context)
                                         .setCustomTitle(c1)
                                         .setNegativeButton("Отмена", (dialog1, which1) -> {
-                                            firestoreDataBase.closeStation(stationIdPut);
+                                            firestoreDataBase.closeStation(s, false);
 
                                         })
                                         .setPositiveButton("Вернул", (dialog1, which1) -> {
-                                            firestoreDataBase.closeStation(stationIdPut);
-                                            firestoreDataBase.endHistory(stationIdPut, name);
+                                            firestoreDataBase.closeStation(s, true);
+                                            firestoreDataBase.endHistory(s, name);
                                             binding.returnUmbrella.setVisibility(View.INVISIBLE);
                                         })
                                         .show();
@@ -142,7 +143,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
                                     public void onFinish() {
 
-                                        firestoreDataBase.closeStation(stationIdPut);
+                                        firestoreDataBase.closeStation(s, false);
                                         bottomSheetVisibilityChanged(false);
                                         fin.dismiss();
                                     }
@@ -299,16 +300,17 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
     private void showDialog() {
         ConstraintLayout c = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.get_umbrella_dialog, binding.getRoot(), false);
+
         AlertDialog d = new MaterialAlertDialogBuilder(context)
                 .setCustomTitle(c)
                 .setNegativeButton("Отмена", (dialog, which) -> {
-                    firestoreDataBase.closeStation(stationID);
+                    firestoreDataBase.closeStation(stationID, false);
                     bottomSheetVisibilityChanged(false);
                 })
                 .setPositiveButton("Забрал", (dialog, which) -> {
                     binding.returnUmbrella.setVisibility(View.VISIBLE);
                     firestoreDataBase.addHistory(stationID, name);
-                    firestoreDataBase.closeStation(stationID);
+                    firestoreDataBase.closeStation(stationID, true);
                     binding.returnUmbrella.setOnClickListener(v -> {
                         ConstraintLayout umbrellaDialog = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_dialog, binding.getRoot(), false);
                         AlertDialog returnUmbrella = new MaterialAlertDialogBuilder(context)
@@ -316,6 +318,9 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                                 .setNegativeButton("Отмена", (dialog1, which1) -> {
                                 })
                                 .setPositiveButton("Вернуть", (dialog1, which1) -> mStartForResult.launch(QrActivity.newIntent(requireActivity())))
+                                .setOnDismissListener(dialog12 -> {
+
+                                })
                                 .show();
                         returnUmbrella.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.alert_dialog_rounded));
                     });
@@ -324,7 +329,11 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                 .show();
 
         CountDownTimer timer = new CountDownTimer(60000, 100) {
+
             public void onTick(long millisUntilFinished) {
+                if (!timerFlag) {
+                    cancel();
+                }
                 int seconds = (int) (millisUntilFinished / 1000);
                 CircularProgressIndicator circularProgressIndicator = c.findViewById(R.id.circularProgressIndicator);
                 TextView t = c.findViewById(R.id.textViewTimer);
@@ -333,11 +342,15 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             }
 
             public void onFinish() {
-                firestoreDataBase.closeStation(stationID);
+                if (!timerFlag) {
+                    cancel();
+                }
+                firestoreDataBase.closeStation(stationID, false);
                 bottomSheetVisibilityChanged(false);
                 d.dismiss();
             }
         }.start();
+
 
         d.setOnDismissListener(dialog -> {
             timer.onFinish();
