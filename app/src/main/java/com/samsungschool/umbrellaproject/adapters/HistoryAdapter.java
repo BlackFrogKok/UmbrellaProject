@@ -14,6 +14,7 @@ import com.samsungschool.umbrellaproject.interfaces.UserCallback;
 import com.samsungschool.umbrellaproject.items.HistoryItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemViewHolder> {
@@ -29,6 +30,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemView
         int min = min(getItemCount(), historyItems.size());
         int max = max(getItemCount(), historyItems.size());
         this.historyItems = new ArrayList<>(historyItems);
+        Collections.reverse(this.historyItems);
         notifyItemRangeChanged(min, max);
     }
 

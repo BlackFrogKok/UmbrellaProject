@@ -76,6 +76,20 @@ public class FirestoreDatabase {
                 });
 
     }
+    public void getUmbrellaFreeArray(String stationID, OnCompleteDataListener<ArrayList<Integer>> listener) {
+        dataBase.collection("stations")
+                .document(stationID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        listener.onComplete(((ArrayList<Integer>) (task.getResult().get("freeUmbrella"))));
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                });
+
+    }
 
     public void getFreeUmbrella(String stationID, OnCompleteDataListener<Integer> listener) {
         dataBase.collection("stations")
@@ -138,13 +152,19 @@ public class FirestoreDatabase {
 
     }
 
-    private void getStatus(String stationID, OnCompleteListener listener) {
+
+
+    public void getStatus(String stationID, OnCompleteDataListener<String> listener) {
         dataBase.collection("stations")
                 .document(stationID)
                 .collection("auth")
                 .document("status")
                 .get()
-                .addOnCompleteListener(listener)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        listener.onComplete(task.getResult().get("status").toString());
+                    }
+                })
                 .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
 
     }

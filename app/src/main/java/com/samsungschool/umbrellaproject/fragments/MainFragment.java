@@ -1,5 +1,6 @@
 package com.samsungschool.umbrellaproject.fragments;
 
+import static android.content.ComponentCallbacks2.TRIM_MEMORY_BACKGROUND;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static android.widget.Toast.makeText;
 import static com.samsungschool.umbrellaproject.activities.QrActivity.EXTRA_KEY_CODE;
@@ -419,40 +420,17 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             returnUmbrella.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.alert_dialog_rounded));
         });
 
-        getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> firestoreDataBase.getUmbrella(1, stationID, () -> {
+        getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> checkAvailability(1));
+        getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> checkAvailability(2));
+        getUmbrellaLayout.getViewById(R.id.button3).setOnClickListener(v -> checkAvailability(3));
+        getUmbrellaLayout.getViewById(R.id.button4).setOnClickListener(v -> checkAvailability(4));
+        getUmbrellaLayout.getViewById(R.id.button5).setOnClickListener(v -> checkAvailability(5));
+        getUmbrellaLayout.getViewById(R.id.button6).setOnClickListener(v -> checkAvailability(6));
+        getUmbrellaLayout.getViewById(R.id.button7).setOnClickListener(v -> checkAvailability(7));
 
 
-        }));
 
-        getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> firestoreDataBase.getUmbrella(2, stationID, () -> {
 
-            showDialog();
-        }));
-
-        getUmbrellaLayout.getViewById(R.id.button3).setOnClickListener(v -> firestoreDataBase.getUmbrella(3, stationID, () -> {
-
-            showDialog();
-        }));
-
-        getUmbrellaLayout.getViewById(R.id.button4).setOnClickListener(v -> firestoreDataBase.getUmbrella(4, stationID, () -> {
-
-            showDialog();
-        }));
-
-        getUmbrellaLayout.getViewById(R.id.button5).setOnClickListener(v -> firestoreDataBase.getUmbrella(5, stationID, () -> {
-
-            showDialog();
-        }));
-
-        getUmbrellaLayout.getViewById(R.id.button6).setOnClickListener(v -> firestoreDataBase.getUmbrella(6, stationID, () -> {
-
-            showDialog();
-        }));
-
-        getUmbrellaLayout.getViewById(R.id.button7).setOnClickListener(v -> firestoreDataBase.getUmbrella(7, stationID, () -> {
-
-            showDialog();
-        }));
     }
 
     @Override
@@ -550,6 +528,48 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
     public static <K, V> BiMap<K, V> zipToMap(List<K> keys, List<V> values) {
         return HashBiMap.create(Objects.requireNonNull(IntStream.range(0, keys.size()).boxed().collect(Collectors.toMap(keys::get, values::get))));
     }
+
+    private void checkAvailability(Integer umbrella){
+        firestoreDataBase.getStatus(stationID, new OnCompleteDataListener<String>() {
+            @Override
+            public void onComplete(@NonNull String s) {
+                if(s.equals("waiting")){
+                    firestoreDataBase.getUmbrellaFreeArray(stationID, new OnCompleteDataListener<ArrayList<Integer>>() {
+                        @Override
+                        public void onComplete(@NonNull ArrayList<Integer> arrayList) {
+                            if(arrayList.contains(Long.valueOf(umbrella))){
+                                firestoreDataBase.getUmbrella(umbrella, stationID, new OnTaskCompleteListener() {
+                                    @Override
+                                    public void OnComplete() {
+                                        showDialog();
+                                    }
+                                });
+                            }
+                            else {
+                                makeText(requireContext(), "Зонт недоступен", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCanceled() {
+                            makeText(requireContext(), "Зонт недоступен", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+                else{
+                    makeText(requireContext(), "Станция используется", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCanceled() {
+                makeText(requireContext(), "Станция используется", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     @Override
     public void onLoaded(User user) {
