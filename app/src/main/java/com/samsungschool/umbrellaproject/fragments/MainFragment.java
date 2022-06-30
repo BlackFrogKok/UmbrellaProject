@@ -136,6 +136,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                                                 .setPositiveButton("Вернул", (dialog1, which1) -> {
                                                     timerFlag = false;
                                                     firestoreDataBase.endHistory(s, user.getActiveSession());
+                                                    user.setActiveSession("");
                                                     firestoreDataBase.closeStation(s, true);
 
 
