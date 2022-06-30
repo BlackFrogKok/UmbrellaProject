@@ -41,6 +41,8 @@ import com.samsungschool.umbrellaproject.R;
 import com.samsungschool.umbrellaproject.data.Station;
 import com.samsungschool.umbrellaproject.models.User;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.Observable;
 
 public class MainActivity extends AppCompatActivity implements NavigationListener {
@@ -154,7 +156,13 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
     public void startQRActivity() {
-        qrLauncher.launch(QrActivity.newIntent(this));
+        if(Objects.equals(user.getActiveSession(), "")) {
+            qrLauncher.launch(QrActivity.newIntent(this));
+        }
+        else {
+            makeText(this, "Вы еще не вернули зонтик", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void startHistoryItemFragment(HistoryItem historyItem) {

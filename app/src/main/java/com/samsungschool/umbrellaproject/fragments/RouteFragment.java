@@ -127,7 +127,7 @@ public class RouteFragment extends Fragment implements DrivingSession.DrivingRou
         });
 
         if (historyItem.getTimePut() != null) binding.textView18.setText(historyItem.getTimePut());
-        binding.textView21.setText(historyItem.isStatus() ? R.string.returned : R.string.rent);
+        binding.textView21.setText(historyItem.getTime());
 
         return binding.getRoot();
     }

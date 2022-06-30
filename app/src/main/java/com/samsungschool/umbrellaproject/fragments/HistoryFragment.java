@@ -128,7 +128,7 @@ public class HistoryFragment extends Fragment {
         historyAdapter = new HistoryAdapter(historyItem -> ((MainActivity) requireActivity()).startHistoryItemFragment(historyItem));
         recyclerView.setAdapter(historyAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.toolbar.setOnClickListener(v -> requireActivity().onBackPressed());
+        binding.toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
     }
 
     @Override

@@ -135,8 +135,9 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                                                 })
                                                 .setPositiveButton("Вернул", (dialog1, which1) -> {
                                                     timerFlag = false;
-                                                    firestoreDataBase.closeStation(s, true);
                                                     firestoreDataBase.endHistory(s, user.getActiveSession());
+                                                    firestoreDataBase.closeStation(s, true);
+
 
                                                     binding.returnUmbrella.setVisibility(View.INVISIBLE);
                                                 })
@@ -351,7 +352,9 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                 .setPositiveButton("Забрал", (dialog, which) -> {
                     binding.returnUmbrella.setVisibility(View.VISIBLE);
                     timerFlag = false;
-                    firestoreDataBase.addHistory(stationID, Calendar.getInstance().getTime().toString());
+                    String date = Calendar.getInstance().getTime().toString();
+                    firestoreDataBase.addHistory(stationID, date);
+                    user.setActiveSession(date);
                     firestoreDataBase.closeStation(stationID, true);
 
                     bottomSheetVisibilityChanged(false);
@@ -417,7 +420,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
         getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> firestoreDataBase.getUmbrella(1, stationID, () -> {
 
-            showDialog();
+
         }));
 
         getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> firestoreDataBase.getUmbrella(2, stationID, () -> {
