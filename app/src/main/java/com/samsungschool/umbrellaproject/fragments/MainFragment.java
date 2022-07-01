@@ -1,14 +1,11 @@
 package com.samsungschool.umbrellaproject.fragments;
 
-import static android.content.ComponentCallbacks2.TRIM_MEMORY_BACKGROUND;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static android.widget.Toast.makeText;
-import static com.samsungschool.umbrellaproject.activities.QrActivity.EXTRA_KEY_CODE;
 import static java.lang.String.format;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -118,68 +115,92 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
                     @Override
                     public void onComplete(@NonNull String s) {
-                        firestoreDataBase.getFreeUmbrella(s, new OnCompleteDataListener<Integer>() {
+                        String v = s;
+                        firestoreDataBase.getStatus(s, new OnCompleteDataListener<String>() {
                             @Override
-                            public void onComplete(@NonNull Integer integer) {
-                                firestoreDataBase.returnUmbrella(integer, s, new OnTaskCompleteListener() {
-                                    @Override
-                                    public void OnComplete() {
-                                        timerFlag = true;
-                                        ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
-                                        Log.d("TAG", "4");
-                                        AlertDialog fin = new MaterialAlertDialogBuilder(context)
-                                                .setCustomTitle(c1)
-                                                .setNegativeButton("Отмена", (dialog1, which1) -> {
-                                                    timerFlag = false;
-                                                    firestoreDataBase.closeStation(s, false);
-
-                                                })
-                                                .setPositiveButton("Вернул", (dialog1, which1) -> {
-                                                    timerFlag = false;
-                                                    firestoreDataBase.endHistory(s, user.getActiveSession());
-                                                    user.setActiveSession("");
-                                                    firestoreDataBase.closeStation(s, true);
-
-
-                                                    binding.returnUmbrella.setVisibility(View.INVISIBLE);
-                                                })
-                                                .show();
-                                        CountDownTimer timer = new CountDownTimer(60000, 100) {
-                                            public void onTick(long millisUntilFinished) {
-                                                if (!timerFlag) {
-                                                    cancel();
-
-                                                }
-                                                int seconds = (int) (millisUntilFinished / 1000);
-                                                CircularProgressIndicator circularProgressIndicator = c1.findViewById(R.id.circularProgressIndicator);
-                                                TextView t = c1.findViewById(R.id.textViewTimer);
-                                                circularProgressIndicator.setProgress((int) (millisUntilFinished / 60000.0 * 100));
-                                                t.setText(String.valueOf(seconds));
+                            public void onComplete(@NonNull String s) {
+                                if(s.equals("waiting")){
+                                    firestoreDataBase.getFreeUmbrella(v, new OnCompleteDataListener<Integer>() {
+                                        @Override
+                                        public void onComplete(@NonNull Integer integer) {
+                                            if( integer == -1){
+                                                makeText(requireContext(), "Ошибка", Toast.LENGTH_SHORT).show();
+                                                return;
                                             }
+                                            firestoreDataBase.returnUmbrella(integer, v, new OnTaskCompleteListener() {
+                                                @Override
+                                                public void OnComplete() {
+                                                    timerFlag = true;
+                                                    ConstraintLayout c1 = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.return_umbrella_final_dialog, null, false);
+                                                    Log.d("TAG", "4");
+                                                    AlertDialog fin = new MaterialAlertDialogBuilder(context)
+                                                            .setCustomTitle(c1)
+                                                            .setNegativeButton("Отмена", (dialog1, which1) -> {
+                                                                timerFlag = false;
+                                                                firestoreDataBase.closeStation(v, false);
 
-                                            public void onFinish() {
-                                                if (!timerFlag) {
-                                                    cancel();
-                                                    return;
+                                                            })
+                                                            .setPositiveButton("Вернул", (dialog1, which1) -> {
+                                                                timerFlag = false;
+                                                                firestoreDataBase.endHistory(v, user.getActiveSession());
+                                                                user.setActiveSession("");
+                                                                firestoreDataBase.closeStation(v, true);
+
+
+                                                                binding.returnUmbrella.setVisibility(View.INVISIBLE);
+                                                            })
+                                                            .show();
+                                                    CountDownTimer timer = new CountDownTimer(60000, 100) {
+                                                        public void onTick(long millisUntilFinished) {
+                                                            if (!timerFlag) {
+                                                                cancel();
+
+                                                            }
+                                                            int seconds = (int) (millisUntilFinished / 1000);
+                                                            CircularProgressIndicator circularProgressIndicator = c1.findViewById(R.id.circularProgressIndicator);
+                                                            TextView t = c1.findViewById(R.id.textViewTimer);
+                                                            circularProgressIndicator.setProgress((int) (millisUntilFinished / 60000.0 * 100));
+                                                            t.setText(String.valueOf(seconds));
+                                                        }
+
+                                                        public void onFinish() {
+                                                            if (!timerFlag) {
+                                                                cancel();
+                                                                return;
+                                                            }
+                                                            firestoreDataBase.closeStation(v, false);
+                                                            bottomSheetVisibilityChanged(false);
+                                                            fin.dismiss();
+                                                        }
+                                                    }.start();
+                                                    fin.setOnDismissListener(dialog -> {
+                                                        timerFlag = false;
+                                                        timer.onFinish();
+                                                        fin.setOnDismissListener(null);
+                                                    });
+                                                    fin.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
                                                 }
-                                                firestoreDataBase.closeStation(s, false);
-                                                bottomSheetVisibilityChanged(false);
-                                                fin.dismiss();
-                                            }
-                                        }.start();
-                                        fin.setOnDismissListener(dialog -> {
-                                            timerFlag = false;
-                                            timer.onFinish();
-                                            fin.setOnDismissListener(null);
-                                        });
-                                        fin.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.alert_dialog_rounded));
-                                    }
-                                });
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCanceled() {
+
+                                        }
+                                    });
+                                }
+                                else {
+                                    makeText(requireContext(), "Станция занята", Toast.LENGTH_SHORT).show();
+                                }
+
+
+
+
                             }
 
                             @Override
                             public void onCanceled() {
-
+                                makeText(requireContext(), "Станция занята", Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -420,13 +441,13 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
             returnUmbrella.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.alert_dialog_rounded));
         });
 
-        getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> checkAvailability(1));
-        getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> checkAvailability(2));
-        getUmbrellaLayout.getViewById(R.id.button3).setOnClickListener(v -> checkAvailability(3));
-        getUmbrellaLayout.getViewById(R.id.button4).setOnClickListener(v -> checkAvailability(4));
-        getUmbrellaLayout.getViewById(R.id.button5).setOnClickListener(v -> checkAvailability(5));
-        getUmbrellaLayout.getViewById(R.id.button6).setOnClickListener(v -> checkAvailability(6));
-        getUmbrellaLayout.getViewById(R.id.button7).setOnClickListener(v -> checkAvailability(7));
+        getUmbrellaLayout.getViewById(R.id.button1).setOnClickListener(v -> checkAvailabilityGet(1));
+        getUmbrellaLayout.getViewById(R.id.button2).setOnClickListener(v -> checkAvailabilityGet(2));
+        getUmbrellaLayout.getViewById(R.id.button3).setOnClickListener(v -> checkAvailabilityGet(3));
+        getUmbrellaLayout.getViewById(R.id.button4).setOnClickListener(v -> checkAvailabilityGet(4));
+        getUmbrellaLayout.getViewById(R.id.button5).setOnClickListener(v -> checkAvailabilityGet(5));
+        getUmbrellaLayout.getViewById(R.id.button6).setOnClickListener(v -> checkAvailabilityGet(6));
+        getUmbrellaLayout.getViewById(R.id.button7).setOnClickListener(v -> checkAvailabilityGet(7));
 
 
 
@@ -529,7 +550,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         return HashBiMap.create(Objects.requireNonNull(IntStream.range(0, keys.size()).boxed().collect(Collectors.toMap(keys::get, values::get))));
     }
 
-    private void checkAvailability(Integer umbrella){
+    private void checkAvailabilityGet(Integer umbrella){
         firestoreDataBase.getStatus(stationID, new OnCompleteDataListener<String>() {
             @Override
             public void onComplete(@NonNull String s) {
