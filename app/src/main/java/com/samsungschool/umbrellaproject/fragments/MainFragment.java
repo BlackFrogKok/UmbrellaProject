@@ -313,6 +313,7 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
         binding.navBtn.setOnClickListener(v -> ((NavigationListener) requireActivity()).onNavigationClick());
         binding.gpsFindPositionBtn.setOnClickListener(v -> moveCamera(viewModel.userLocations.getValue(), 17.0f));
         mapview.getMap().setNightModeEnabled(uiThemeCode == 33);
+
         viewModel.loadStationsPoint();
     }
 

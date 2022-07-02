@@ -76,6 +76,7 @@ public class FirestoreDatabase {
                 });
 
     }
+
     public void getUmbrellaFreeArray(String stationID, OnCompleteDataListener<ArrayList<Integer>> listener) {
         dataBase.collection("stations")
                 .document(stationID)
@@ -113,11 +114,10 @@ public class FirestoreDatabase {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Long longVal =  (Long) (task.getResult().get("active"));
-                        if (longVal == null){
+                        Long longVal = (Long) (task.getResult().get("active"));
+                        if (longVal == null) {
                             listener.onComplete(0);
-                        }
-                        else {
+                        } else {
                             listener.onComplete(longVal.intValue());
                         }
 
@@ -153,7 +153,6 @@ public class FirestoreDatabase {
     }
 
 
-
     public void getStatus(String stationID, OnCompleteDataListener<String> listener) {
         dataBase.collection("stations")
                 .document(stationID)
@@ -161,7 +160,7 @@ public class FirestoreDatabase {
                 .document("status")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         listener.onComplete(task.getResult().get("status").toString());
                     }
                 })
@@ -199,7 +198,7 @@ public class FirestoreDatabase {
                         .document(session)
                         .set(h)
                         .addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()){
+                            if (task1.isSuccessful()) {
                                 setActiveSession(session);
                             }
                         })
@@ -222,7 +221,7 @@ public class FirestoreDatabase {
                 .document(ses)
                 .update(map1)
                 .addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         setActiveSession("");
                     }
                 })
@@ -239,8 +238,6 @@ public class FirestoreDatabase {
 
                 })
                 .addOnFailureListener(e -> FirebaseCrashlytics.getInstance().recordException(e));
-
-
 
 
     }
@@ -279,7 +276,6 @@ public class FirestoreDatabase {
     }
 
 
-
     public static Point castHashMapToPoint(DocumentSnapshot document) {
         HashMap hashMap = (HashMap) document.get("location");
         return new Point((Double) hashMap.get("latitude"), (Double) hashMap.get("longitude"));
@@ -294,17 +290,15 @@ public class FirestoreDatabase {
         Integer hours = calendar.getTime().getHours();
         String minutesStr;
         String hoursStr;
-        if (minutes < 10){
+        if (minutes < 10) {
             minutesStr = "0" + String.valueOf(minutes);
-        }
-        else {
+        } else {
             minutesStr = String.valueOf(minutes);
         }
 
-        if (hours < 10){
+        if (hours < 10) {
             hoursStr = "0" + String.valueOf(hours);
-        }
-        else {
+        } else {
             hoursStr = String.valueOf(hours);
         }
 
@@ -314,7 +308,7 @@ public class FirestoreDatabase {
 
     private Integer getFree(ArrayList<Integer> arrayList) {
         for (int i = 1; i < 8; i++) {
-            if (!arrayList.contains(Long.valueOf(i))){
+            if (!arrayList.contains(Long.valueOf(i))) {
                 return i;
             }
         }

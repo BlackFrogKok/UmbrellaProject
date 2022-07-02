@@ -26,6 +26,7 @@ import com.samsungschool.umbrellaproject.data.FirestoreDatabase;
 import com.samsungschool.umbrellaproject.databinding.FragmentRouteBinding;
 import com.samsungschool.umbrellaproject.interfaces.OnCompleteDataListener;
 import com.samsungschool.umbrellaproject.items.HistoryItem;
+import com.yandex.mapkit.MapKit;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.RequestPoint;
 import com.yandex.mapkit.directions.DirectionsFactory;
@@ -85,10 +86,17 @@ public class RouteFragment extends Fragment implements DrivingSession.DrivingRou
         historyItem = arguments != null ? getArguments().getParcelable(ARG_KEY_HISTORY) : new HistoryItem("", "", "");
         binding = FragmentRouteBinding.inflate(getLayoutInflater());
         mapView = binding.map;
+        mapView.setNoninteractive(true);
         mapView.getMap().setNightModeEnabled(getResources().getConfiguration().uiMode == 33);
         mapObjects = mapView.getMap().getMapObjects().addCollection();
         binding.toolbar.setTitle(historyItem.getDate());
-        binding.toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+        binding.toolbar.setNavigationOnClickListener(v -> {
+            mapObjects.clear();
+            mapView.onStop();
+            MapKitFactory.getInstance().onStop();
+            requireActivity().onBackPressed();
+
+        });
         binding.textView19.setText(historyItem.getStationGetID());
         binding.textView17.setText(historyItem.getTimeGet());
         firestoreDataBase.getDocument(historyItem.getStationGetID(), new OnCompleteDataListener<DocumentSnapshot>() {
@@ -135,6 +143,8 @@ public class RouteFragment extends Fragment implements DrivingSession.DrivingRou
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mapView.onStop();
+        MapKitFactory.getInstance().onStop();
         binding = null;
     }
 
@@ -142,6 +152,7 @@ public class RouteFragment extends Fragment implements DrivingSession.DrivingRou
     public void onStop() {
         mapView.onStop();
         MapKitFactory.getInstance().onStop();
+        binding = null;
         super.onStop();
     }
 
