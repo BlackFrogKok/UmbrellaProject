@@ -6,6 +6,7 @@ import static java.lang.String.format;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -148,6 +149,13 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
 
 
                                                                 binding.returnUmbrella.setVisibility(View.INVISIBLE);
+                                                            })
+                                                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                                @Override
+                                                                public void onCancel(DialogInterface dialog) {
+                                                                    timerFlag = false;
+                                                                    firestoreDataBase.closeStation(v, false);
+                                                                }
                                                             })
                                                             .show();
                                                     CountDownTimer timer = new CountDownTimer(60000, 100) {
@@ -382,6 +390,13 @@ public class MainFragment extends Fragment implements ClusterListener, ClusterTa
                     firestoreDataBase.closeStation(stationID, true);
 
                     bottomSheetVisibilityChanged(false);
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        timerFlag = false;
+                        firestoreDataBase.closeStation(stationID, false);
+                    }
                 })
                 .show();
 
