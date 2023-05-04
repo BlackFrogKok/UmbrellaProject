@@ -13,11 +13,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,7 +48,7 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
 
     private String mVerificationId;
     private ForceResendingToken mForceResendingToken;
-
+    private AuthState authState;
     private ActivityAuthBinding binding;
 
     public static Intent newIntent(Context context) {
@@ -59,7 +61,16 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
         binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         startFragment(PhoneFragment.newFragment(), TAG_PHONE_FRAGMENT);
+        if(savedInstanceState != null){
+            if(Objects.equals(savedInstanceState.getString("authState"), "sms_sent")){
+                mVerificationId = savedInstanceState.getString("mVerificationId");
+                user.setPhoneNumber(savedInstanceState.getString("userPhone"));
+                startFragment(SmsFragment.newFragment(user.getPhoneNumber()), TAG_CODE_FRAGMENT);
+                authState = AuthState.SMS_SENT;
+            }
+        }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -71,6 +82,7 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
         }
     }
 
+
     @Override
     public void onPhoneSubmitted(String phone) {
         if (isEmpty(phone)) {
@@ -80,6 +92,17 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
             user.setPhoneNumber(phone);
             startPhoneVerification(phone);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        if(authState == AuthState.SMS_SENT){
+            outState.putString("authState","sms_sent");
+            outState.putString("mVerificationId", mVerificationId);
+            outState.putString("userPhone", user.getPhoneNumber());
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -126,6 +149,8 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
     }
 
     public void verifyPhoneWithCode(String code) {
+        String a = mVerificationId;
+        Integer a1 = 5;
         signWithPhoneAuthCredential(getCredential(mVerificationId, code));
     }
 
@@ -153,6 +178,7 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
                         mVerificationId = verificationId;
                         mForceResendingToken = token;
                         binding.progressBar.setVisibility(View.GONE);
+                        authState = AuthState.SMS_SENT;
                         startFragment(SmsFragment.newFragment(user.getPhoneNumber()), TAG_CODE_FRAGMENT);
                     }
                 })

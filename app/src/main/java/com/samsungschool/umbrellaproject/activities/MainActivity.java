@@ -73,8 +73,11 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
                     binding.getRoot().close();
                 });
         setupNavigation();
+
+
         loadUser();
     }
+
 
     @SuppressLint("NonConstantResourceId")
     private void setupNavigation() {
