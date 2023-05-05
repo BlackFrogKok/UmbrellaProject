@@ -60,6 +60,8 @@ public class AuthActivity extends AppCompatActivity implements AuthListener {
         super.onCreate(savedInstanceState);
         binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        binding.logoTextView.setCompoundDrawablesWithIntrinsicBounds(
+                0, 0, R.drawable.logo, 0);
         startFragment(PhoneFragment.newFragment(), TAG_PHONE_FRAGMENT);
         if(savedInstanceState != null){
             if(Objects.equals(savedInstanceState.getString("authState"), "sms_sent")){

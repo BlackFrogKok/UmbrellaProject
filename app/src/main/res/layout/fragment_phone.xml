@@ -13,18 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="68dp"
-        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/line"
-        android:textSize="20sp"
+        android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_right_24"
         android:hint="Код страны"
         android:text="+7"
         android:textColor="?attr/colorOnSecondary"
         android:textColorHint="?attr/colorOnSecondary"
+        android:textSize="20sp"
         android:theme="@style/MyEditText"
+        app:layout_constraintBottom_toTopOf="@+id/phoneTextInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phoneTextInputLayout"
@@ -35,7 +35,9 @@
         app:errorIconDrawable="@drawable/ic_baseline_phone_24"
         app:errorTextColor="@color/blue"
         app:hintEnabled="false"
+        app:layout_constraintBottom_toBottomOf="@+id/CountryCodeEditText"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/CountryCodeEditText"
         app:layout_constraintTop_toTopOf="@+id/CountryCodeEditText">
 
@@ -58,42 +60,44 @@
         android:id="@+id/CountryCodeEditText"
         android:layout_width="63dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:inputType="numberSigned"
         android:maxLength="6"
         android:textColor="?attr/colorOnSecondary"
         android:theme="@style/MyEditText"
         app:backgroundTint="?attr/colorOnSecondary"
+        app:layout_constraintBottom_toBottomOf="@+id/continueBtn"
         app:layout_constraintEnd_toStartOf="@+id/phoneTextInputLayout"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ContryCodeEditText2" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/materialTextView3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_margin="16dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:gravity="center_horizontal"
-        android:layout_marginTop="200dp"
         android:text="@string/verificationPhoneText"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="30sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/ContryCodeEditText2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continueBtn"
-        android:layout_width="342dp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/ok"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="20sp"
-        android:layout_marginTop="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/CountryCodeEditText" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

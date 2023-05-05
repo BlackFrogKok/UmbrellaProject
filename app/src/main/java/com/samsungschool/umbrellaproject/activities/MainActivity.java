@@ -16,6 +16,7 @@ import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     private final Station station = new Station();
     private User user;
 
+    private NavState currentState;
     private ActivityMainBinding binding;
 
     public static Intent newIntent(Context context) {
@@ -78,6 +80,10 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         loadUser();
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
 
     @SuppressLint("NonConstantResourceId")
     private void setupNavigation() {
@@ -85,18 +91,23 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
             binding.getRoot().close();
             switch (item.getItemId()) {
                 case R.id.nav_user:
+                    currentState = NavState.PROFILE;
                     if (user != null) startFragment(ProfileFragment.newInstance(user));
                     return true;
                 case R.id.nav_settings:
+                    currentState = NavState.SETTINGS;
                     startFragment(SettingsFragment.newInstance());
                     return true;
                 case R.id.nav_history:
+                    currentState = NavState.HISTORY;
                     startFragment(HistoryFragment.newInstance());
                     return true;
                 case R.id.nav_help:
+                    currentState = NavState.HOW_WORKS;
                     startActivity(HelpActivity.newIntent(this));
                     return true;
                 case R.id.nav_about:
+                    currentState = NavState.ABOUT;
                     startFragment(AboutFragment.newInstance());
                     return true;
                 case R.id.nav_qr:
