@@ -85,34 +85,6 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    @Override
-    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        Animator anim = AnimatorInflater.loadAnimator(getActivity(), nextAnim);
-        anim.addListener(new Animator.AnimatorListener() {
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                anim.removeListener(this);
-                getData();
-            }
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-
-        });
-
-        return anim;
-    }
-
 
     @Nullable
     @Override
@@ -124,6 +96,7 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getData();
         RecyclerView recyclerView = binding.recyclerView;
         historyAdapter = new HistoryAdapter(historyItem -> ((MainActivity) requireActivity()).startHistoryItemFragment(historyItem));
         recyclerView.setAdapter(historyAdapter);

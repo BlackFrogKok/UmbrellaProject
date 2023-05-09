@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
 
     private final Station station = new Station();
     private User user;
-
+    private MainState currentState;
     private ActivityMainBinding binding;
 
     public static Intent newIntent(Context context) {
@@ -62,55 +62,95 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        if (savedInstanceState != null) {
+            currentState = MainState.valueOf(savedInstanceState.getString("currentState"));
+            user = savedInstanceState.getParcelable("user");
+        } else {
+            currentState = MainState.MAP;
+        }
         setContentView(binding.getRoot());
         startFragment(MainFragment.newInstance(), TAG_MAIN_FRAGMENT);
-        binding.materialToolbar2.setNavigationOnClickListener(v -> startFragment(MainFragment.newInstance(), TAG_MAIN_FRAGMENT));
-        binding.navigationDrawer
-                .getHeaderView(0)
-                .findViewById(R.id.userAvatar)
-                .setOnClickListener(v -> {
-                    if (user != null) startFragment(ProfileFragment.newInstance(user));
-                    binding.getRoot().close();
-                });
+        triggerStateSwitcher();
         setupNavigation();
+        binding.materialToolbar2.setNavigationOnClickListener(v -> startFragment(MainFragment.newInstance(), TAG_MAIN_FRAGMENT));
+        binding.navigationDrawer.getHeaderView(0).findViewById(R.id.userAvatar).setOnClickListener(v -> {
+            if (user != null) startFragment(ProfileFragment.newInstance(user));
+            binding.getRoot().close();
+        });
 
 
         loadUser();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("currentState", currentState.toString());
+        outState.putParcelable("user", user);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void triggerStateSwitcher(){
+        switch (currentState) {
+            case USER:
+                if (user != null) startFragment(ProfileFragment.newInstance(user));
+
+                break;
+            case SETTINGS:
+                startFragment(SettingsFragment.newInstance());
+
+                break;
+            case HISTORY:
+                startFragment(HistoryFragment.newInstance());
+
+                break;
+            case ABOUT:
+                startFragment(AboutFragment.newInstance());
+                break;
+            case DRAWER:
+                binding.getRoot().open();
+                break;
+
+        }
+    }
 
     @SuppressLint("NonConstantResourceId")
     private void setupNavigation() {
+
         binding.navigationDrawer.setNavigationItemSelectedListener(item -> {
             binding.getRoot().close();
             switch (item.getItemId()) {
                 case R.id.nav_user:
                     if (user != null) startFragment(ProfileFragment.newInstance(user));
+                    currentState = MainState.USER;
                     return true;
                 case R.id.nav_settings:
                     startFragment(SettingsFragment.newInstance());
+                    currentState = MainState.SETTINGS;
                     return true;
                 case R.id.nav_history:
                     startFragment(HistoryFragment.newInstance());
+                    currentState = MainState.HISTORY;
                     return true;
                 case R.id.nav_help:
                     startActivity(HelpActivity.newIntent(this));
                     return true;
                 case R.id.nav_about:
                     startFragment(AboutFragment.newInstance());
+                    currentState = MainState.ABOUT;
                     return true;
                 case R.id.nav_qr:
                     startQRActivity();
                     return true;
-
                 default:
                     return false;
             }
         });
     }
 
+
     @Override
     public void onBackPressed() {
+        currentState = MainState.MAP;
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
         } else {
@@ -121,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     @Override
     public void onNavigationClick() {
         binding.getRoot().open();
+        currentState = MainState.DRAWER;
     }
 
     private void loadUser() {
@@ -161,10 +202,9 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
     public void startQRActivity() {
-        if(Objects.equals(user.getActiveSession(), "")) {
+        if (Objects.equals(user.getActiveSession(), "")) {
             qrLauncher.launch(QrActivity.newIntent(this));
-        }
-        else {
+        } else {
             makeText(this, "Вы еще не вернули зонтик", Toast.LENGTH_SHORT).show();
         }
 
@@ -175,12 +215,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
     private void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out).replace(R.id.fragmentContainer, fragment).addToBackStack(null).commit();
     }
 
     private void startFragment(Fragment fragment) {
@@ -188,12 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
     private void startFragment(Fragment fragment, String tag) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                .add(R.id.fragmentContainer, fragment, tag)
-                .addToBackStack(null)
-                .commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out).add(R.id.fragmentContainer, fragment, tag).addToBackStack(null).commit();
     }
 
     ActivityResultLauncher<Intent> qrLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {

@@ -57,6 +57,7 @@
         />
 
     <androidx.fragment.app.FragmentContainerView
+        tools:layout="@layout/fragment_sms"
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
