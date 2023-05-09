@@ -10,7 +10,7 @@
         android:id="@+id/userAvatarLayout"
         android:layout_width="214dp"
         android:layout_height="214dp"
-        app:cardCornerRadius="120dp"
+        app:cardCornerRadius="200dp"
         app:cardElevation="30dp"
         app:layout_constraintBottom_toTopOf="@+id/textView14"
         app:layout_constraintEnd_toEndOf="parent"
