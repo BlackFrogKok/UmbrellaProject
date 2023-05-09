@@ -5,56 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.AuthActivity">
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorSecondary"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        >
-
-        <LinearLayout
-            android:id="@+id/llContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="100dp"
-                android:fontFamily="@font/title_project_logo"
-                android:text="Umbrella\t"
-                android:textAllCaps="true"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="25sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="5dp"
-                android:src="@drawable/logo" />
-
-        </LinearLayout>
-
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/logoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:fontFamily="@font/title_project_logo"
+            android:text="Umbrella "
+            android:textAllCaps="true"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="25sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progress_bar"
-        app:layout_constraintTop_toBottomOf="@id/toolbar2"
+        android:indeterminate="true"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:indeterminate="true"
-        app:trackCornerRadius="10dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar2"
         app:showAnimationBehavior="inward"
-        android:visibility="gone"
-        />
+        app:trackCornerRadius="10dp" />
 
     <androidx.fragment.app.FragmentContainerView
         tools:layout="@layout/fragment_sms"
@@ -64,5 +46,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar" />
+        app:layout_constraintTop_toBottomOf="@id/progress_bar"
+        tools:layout="@layout/fragment_sms" />
 </androidx.constraintlayout.widget.ConstraintLayout>

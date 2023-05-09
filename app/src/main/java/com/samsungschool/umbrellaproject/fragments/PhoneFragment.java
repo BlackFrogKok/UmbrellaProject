@@ -24,6 +24,7 @@ import com.samsungschool.umbrellaproject.interfaces.AuthListener;
 
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
+import ru.tinkoff.decoro.slots.PredefinedSlots;
 import ru.tinkoff.decoro.slots.Slot;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
@@ -33,7 +34,9 @@ public class PhoneFragment extends Fragment {
     private FragmentPhoneBinding binding;
     private CountryPicker picker;
     private FormatWatcher formatWatcherCodCountry;
-
+    private FormatWatcher formatWatcherPhone;
+    Slot[] slots;
+    Slot[] slotsCodeCountry;
     public static String TAG_PHONE_FRAGMENT = "phone";
 
     public static Fragment newFragment() {
@@ -59,11 +62,11 @@ public class PhoneFragment extends Fragment {
             }
         });
 
-        Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("(___) ___-__-__");
-        FormatWatcher formatWatcherPhone = new MaskFormatWatcher(MaskImpl.createTerminated(slots));
 
-        Slot[] slotsCodeContry = new UnderscoreDigitSlotsParser().parseSlots("+____");
-        formatWatcherCodCountry = new MaskFormatWatcher(MaskImpl.createTerminated(slotsCodeContry));
+        slots = new UnderscoreDigitSlotsParser().parseSlots("(___) ___-__-__");
+        formatWatcherPhone = new MaskFormatWatcher(MaskImpl.createTerminated(slots));
+        slotsCodeCountry = new UnderscoreDigitSlotsParser().parseSlots("+____");
+        formatWatcherCodCountry = new MaskFormatWatcher(MaskImpl.createTerminated(slotsCodeCountry));
 
         formatWatcherPhone.installOn(binding.phoneEditText);
         formatWatcherCodCountry.installOn(binding.CountryCodeEditText);
@@ -79,6 +82,14 @@ public class PhoneFragment extends Fragment {
             }
 
         });
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("enteredPhone",  formatWatcherPhone.getMask().toUnformattedString());
+        outState.putString("enteredCode", formatWatcherCodCountry.getMask().toString());
+        super.onSaveInstanceState(outState);
     }
 
     @SuppressLint("SetTextI18n")

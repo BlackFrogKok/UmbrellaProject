@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
         app:iconTint="@color/black"
-        app:icon="@drawable/ic_baseline_backspace_24"
+
         app:iconPadding="2dp"
         app:iconSize="30sp"
         app:iconGravity="textEnd"
